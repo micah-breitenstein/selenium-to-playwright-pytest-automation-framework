@@ -16,8 +16,8 @@ def test_entry_ad_modal_can_be_closed(driver, base_url):
 
     page.close_modal()
 
-    # Optional: quick confirm (DO NOT use action timeout here)
-    assert page.modal_is_visible(timeout=0.2) is False
+    # Confirm modal is no longer visible (allow time for CSS fade-out animation)
+    assert page.modal_is_visible(timeout=1) is False
 
 
 @pytest.mark.no_safari
