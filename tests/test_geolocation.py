@@ -1,4 +1,6 @@
 # tests/test_geolocation.py
+import pytest
+
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -7,6 +9,7 @@ from selenium.webdriver.support import expected_conditions as EC
 GEO_URL = "https://the-internet.herokuapp.com/geolocation"
 
 
+@pytest.mark.no_safari
 def test_geolocation_shows_mocked_coords(driver):
     # pick something recognizable
     latitude = 37.7749
