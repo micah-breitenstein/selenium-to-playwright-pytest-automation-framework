@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+import time
 from dataclasses import dataclass
 
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
@@ -64,11 +66,13 @@ class JQueryUIMenuPage:
 
     def _hover(self, locator, timeout: float | None = None) -> None:
         el = self._visible(locator, timeout=timeout)
-        ActionChains(self.driver).move_to_element(el).pause(0.05).perform()
+        ActionChains(self.driver).move_to_element(el).pause(0.15).perform()
 
     def open_downloads_menu(self) -> None:
-        self._hover(self.ENABLED, timeout=5)
-        self._hover(self.DOWNLOADS, timeout=5)
+        self._hover(self.ENABLED, timeout=15)
+        time.sleep(0.3)
+        self._hover(self.DOWNLOADS, timeout=15)
+        time.sleep(0.3)
 
     def _get_href(self, locator, timeout: float | None = None) -> str:
         el = self._visible(locator, timeout=timeout)
@@ -77,22 +81,39 @@ class JQueryUIMenuPage:
             raise AssertionError(f"No href attribute found for locator: {locator}")
         return href
 
+    def _download_href_with_retry(self, locator, retries: int = 3) -> str:
+        """Open the Downloads submenu, click the target link, return its href.
+
+        Retries the full hover→click sequence on failure because the jQuery UI
+        submenu can collapse between steps, especially under parallel load.
+        """
+        last_exc: Exception | None = None
+        for attempt in range(retries):
+            try:
+                self.open_downloads_menu()
+                el = self._visible(locator, timeout=5)
+                href = el.get_attribute("href")
+                if href:
+                    return href
+            except (TimeoutException, Exception) as exc:
+                last_exc = exc
+            # Reset by moving away from the menu before retrying
+            ActionChains(self.driver).move_by_offset(-200, -200).perform()
+            time.sleep(0.5)
+        raise TimeoutException(
+            f"Could not get href for {locator} after {retries} attempts"
+        ) from last_exc
+
     # ---- Public actions that return hrefs ----
     def pdf_href(self) -> str:
-        self.open_downloads_menu()
-        self._click(self.PDF, timeout=5)
-        return self._get_href(self.PDF, timeout=5)
+        return self._download_href_with_retry(self.PDF)
 
     def csv_href(self) -> str:
-        self.open_downloads_menu()
-        self._click(self.CSV, timeout=5)
-        return self._get_href(self.CSV, timeout=5)
+        return self._download_href_with_retry(self.CSV)
 
     def excel_href(self) -> str:
-        self.open_downloads_menu()
-        self._click(self.EXCEL, timeout=5)
-        return self._get_href(self.EXCEL, timeout=5)
+        return self._download_href_with_retry(self.EXCEL)
 
     def back_to_jquery_href(self) -> str:
-        self._hover(self.ENABLED, timeout=5)
-        return self._get_href(self.BACK_TO_JQUERY, timeout=5)
+        self._hover(self.ENABLED, timeout=15)
+        return self._get_href(self.BACK_TO_JQUERY, timeout=15)
