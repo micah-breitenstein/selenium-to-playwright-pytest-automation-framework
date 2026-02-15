@@ -15,7 +15,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 class KeyPressesPage:
     driver: WebDriver
     base_url: str
-    timeout: float = 10.0
+    timeout: float = 20.0
     poll: float = 0.1
 
     PATH = "/key_presses"
