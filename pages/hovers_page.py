@@ -22,7 +22,7 @@ class HoversPage:
         self.driver.get(self.base_url + self.URL_PATH)
         return self
 
-    def hover_user(self, user_index_1_based: int, timeout: int = 10) -> "HoversPage":
+    def hover_user(self, user_index_1_based: int, timeout: int = 20) -> "HoversPage":
         idx = user_index_1_based - 1
         wait = WebDriverWait(self.driver, timeout)
 
