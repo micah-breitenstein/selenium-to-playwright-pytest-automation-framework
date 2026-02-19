@@ -8,6 +8,7 @@ from datetime import datetime
 from selenium import webdriver
 from selenium.common.exceptions import (
     InvalidSessionIdException,
+    SessionNotCreatedException,
     WebDriverException,
     NoSuchWindowException,
 )
@@ -115,10 +116,27 @@ def _create_remote(request):
     }
     options.set_capability("sauce:options", sauce_opts)
 
-    return webdriver.Remote(
-        command_executor=_sauce_hub(region),
-        options=options,
-    )
+    # Retry session creation to handle concurrent-session-limit errors that
+    # occur when xdist workers overlap session teardown / creation.
+    # With a 1-slot plan and multiple workers, waits can be long.
+    max_retries = 30
+    retry_delay = 15  # seconds between retries  (total budget: ~7.5 min)
+    log = logging.getLogger(__name__)
+    for attempt in range(1, max_retries + 1):
+        try:
+            return webdriver.Remote(
+                command_executor=_sauce_hub(region),
+                options=options,
+            )
+        except SessionNotCreatedException as exc:
+            if "concurrent session limit" in str(exc) and attempt < max_retries:
+                log.warning(
+                    "Concurrent session limit hit (attempt %d/%d) – retrying in %ds …",
+                    attempt, max_retries, retry_delay,
+                )
+                time.sleep(retry_delay)
+            else:
+                raise
 
 
 # -------------------------
@@ -213,7 +231,9 @@ def driver(request, base_url):
     remote = request.config.getoption("--remote")
 
     if remote:
-        return request.getfixturevalue("_module_driver_remote")
+        drv = request.getfixturevalue("_module_driver_remote")
+        yield drv
+        return
 
     # HARD BLOCK: local Safari + xdist => not supported
     if browser == "safari":
