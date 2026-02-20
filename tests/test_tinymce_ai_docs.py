@@ -1,3 +1,5 @@
+import pytest
+
 from pages import TinyMceAiDocsPage
 
 
@@ -5,6 +7,7 @@ def test_tinymce_ai_docs_demo_loads(driver):
     TinyMceAiDocsPage(driver).open().assert_phrase_in_editor("Try out AI Assistant!")
 
 
+@pytest.mark.no_safari
 def test_tinymce_docs_can_type_and_bold(driver):
     (
         TinyMceAiDocsPage(driver)
@@ -14,6 +17,7 @@ def test_tinymce_docs_can_type_and_bold(driver):
     )
 
 
+@pytest.mark.no_safari
 def test_tinymce_docs_can_type_and_italic(driver):
     (
         TinyMceAiDocsPage(driver)
