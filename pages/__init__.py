@@ -34,6 +34,7 @@ _EXPORTS: dict[str, str] = {
     "HorizontalSliderPage": "horizontal_slider_page",
     "HoversPage": "hovers_page",
     "InfiniteScrollPage": "infinite_scroll_page",
+    "TinyMceAiDocsPage": "tinymce_ai_docs_page",
 }
 
 __all__ = sorted(_EXPORTS.keys())
