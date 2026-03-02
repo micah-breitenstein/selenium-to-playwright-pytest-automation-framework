@@ -33,6 +33,7 @@ _EXPORTS: dict[str, str] = {
     "GeolocationPage": "geolocation_page",
     "HorizontalSliderPage": "horizontal_slider_page",
     "HoversPage": "hovers_page",
+    "InfiniteScrollPage": "infinite_scroll_page",
 }
 
 __all__ = sorted(_EXPORTS.keys())
