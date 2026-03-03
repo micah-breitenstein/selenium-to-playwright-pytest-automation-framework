@@ -2,11 +2,11 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
-from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 
 
 @dataclass
@@ -54,7 +54,7 @@ class JQueryUIMenuPage:
             return False
 
         return wait.until(_find_visible)
-    
+
     def _click(self, locator, timeout: float | None = None) -> None:
         el = self._visible(locator, timeout=timeout)
         try:
