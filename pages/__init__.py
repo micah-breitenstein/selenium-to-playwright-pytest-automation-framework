@@ -29,7 +29,6 @@ _EXPORTS: dict[str, str] = {
     "LoginPage": "login_page",
     "NestedFramesPage": "nested_frames_page",
     "SecureAreaPage": "secure_area_page",
-    "IFramePage": "iframe_page",
     "GeolocationPage": "geolocation_page",
     "HorizontalSliderPage": "horizontal_slider_page",
     "HoversPage": "hovers_page",
