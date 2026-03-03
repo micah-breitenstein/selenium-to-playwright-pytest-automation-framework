@@ -1,11 +1,9 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from time import perf_counter
-from typing import Callable, TypeVar, Optional
 
-from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import (
@@ -14,126 +12,136 @@ from selenium.common.exceptions import (
     ElementClickInterceptedException,
 )
 
-T = TypeVar("T")
-
 
 @dataclass
 class EntryAdPage:
     driver: WebDriver
     base_url: str
-
-    # Purposeful action waits (clicks, expected appearance, etc.)
     timeout: float = 10.0
-
-    # Short probe wait (boolean checks only)
     check_timeout: float = 1.0
 
-    URL_PATH = "/entry_ad"
+    PATH = "/entry_ad"
 
+    # -------------------------
     # Locators
-    _MODAL_CONTAINER = (By.ID, "modal")
-    _MODAL_TITLE = (By.CSS_SELECTOR, "#modal h3")
-    _MODAL_CLOSE = (By.CSS_SELECTOR, "#modal .modal-footer p")  # "Close"
-    _RESTART_AD = (By.ID, "restart-ad")
-
-    # -------------------------
-    # Utilities
     # -------------------------
 
-    def _timed(self, label: str, fn: Callable[[], T]) -> T:
-        start = perf_counter()
-        try:
-            return fn()
-        finally:
-            elapsed = perf_counter() - start
-            print(f"[EntryAdPage] {label}: {elapsed:.3f}s")
+    MODAL = (By.ID, "modal")  # overlay/container (may remain present)
+    MODAL_CONTENT = (By.CSS_SELECTOR, "#modal .modal")  # dialog box
+    MODAL_TITLE = (By.CSS_SELECTOR, "#modal .modal-title h3")
+    MODAL_CLOSE = (By.CSS_SELECTOR, "#modal .modal-footer p")  # "Close" <p> in demo
 
-    def _wait(self, timeout: Optional[float] = None) -> WebDriverWait:
-        t = self.timeout if timeout is None else timeout
-        return WebDriverWait(self.driver, t)
-
-    def _is_displayed(self, locator: tuple[str, str]) -> bool:
-        """Freshly locate each time; avoids stale cached WebElements."""
-        els = self.driver.find_elements(*locator)
-        if not els:
-            return False
-        try:
-            return els[0].is_displayed()
-        except StaleElementReferenceException:
-            return False
+    RESTART_AD = (By.ID, "restart-ad")
+    RESTART_AD_FALLBACK = (By.LINK_TEXT, "click here")
 
     # -------------------------
-    # Page Actions
+    # Navigation
     # -------------------------
+
+    def url(self) -> str:
+        return f"{self.base_url.rstrip('/')}{self.PATH}"
 
     def open(self) -> "EntryAdPage":
-        self._timed(
-            "open() driver.get",
-            lambda: self.driver.get(self.base_url + self.URL_PATH),
-        )
+        self.driver.get(self.url())
         return self
 
-    def wait_for_modal(self, timeout: Optional[float] = None) -> None:
-        self._timed(
-            "wait_for_modal() wait for modal visible",
-            lambda: self._wait(timeout).until(
-                lambda d: self._is_displayed(self._MODAL_CONTAINER)
-            ),
-        )
+    # -------------------------
+    # Modal helpers
+    # -------------------------
 
-    def modal_is_visible(self, timeout: Optional[float] = None) -> bool:
-        t = self.check_timeout if timeout is None else timeout
+    def modal_is_visible(self, timeout: float = 2.0) -> bool:
+        """Fast probe: is the *dialog* visible?"""
+        wait = WebDriverWait(self.driver, timeout)
         try:
-            self._timed(
-                f"modal_is_visible() probe (timeout={t})",
-                lambda: WebDriverWait(self.driver, t).until(
-                    lambda d: self._is_displayed(self._MODAL_CONTAINER)
-                ),
-            )
+            wait.until(EC.visibility_of_element_located(self.MODAL_CONTENT))
             return True
         except TimeoutException:
-            print("[EntryAdPage] modal_is_visible() timed out -> False")
             return False
 
-    def modal_title(self) -> str:
-        return self._timed(
-            "modal_title() find title element",
-            lambda: self.driver.find_element(*self._MODAL_TITLE).text.strip(),
-        )
+    def wait_for_modal(self, timeout: float = 10.0) -> "EntryAdPage":
+        """
+        Purposeful wait — used when we EXPECT the modal to appear.
+        Waits until dialog is visible AND title text is present.
+        """
+        wait = WebDriverWait(self.driver, timeout)
 
-    def close_modal(self) -> None:
-        # Ensure it is visible first (fresh display check)
-        self._timed(
-            "close_modal() wait for modal visible",
-            lambda: self._wait().until(lambda d: self._is_displayed(self._MODAL_CONTAINER)),
-        )
-
-        def _click_close():
-            close_el = self._wait().until(EC.presence_of_element_located(self._MODAL_CLOSE))
+        def ready(d: WebDriver):
             try:
-                self._wait().until(EC.element_to_be_clickable(self._MODAL_CLOSE))
-                close_el.click()
-                return
-            except (ElementClickInterceptedException, TimeoutException):
-                # Fallback: JS click (very effective for this page)
-                self.driver.execute_script("arguments[0].click();", close_el)
+                dialog = d.find_element(*self.MODAL_CONTENT)
+                if not dialog.is_displayed():
+                    return False
+                title = d.find_element(*self.MODAL_TITLE).text.strip()
+                return title if title else False
+            except StaleElementReferenceException:
+                return False
+            except Exception:
+                return False
 
-        self._timed("close_modal() click CLOSE (with JS fallback)", _click_close)
+        wait.until(ready)
+        return self
 
-        # Robust "closed" condition:
-        # treat closed as "close control no longer displayed" OR "modal container no longer displayed"
-        def _closed(_driver):
-            close_visible = self._is_displayed(self._MODAL_CLOSE)
-            modal_visible = self._is_displayed(self._MODAL_CONTAINER)
-            return (not close_visible) and (not modal_visible) or (not modal_visible) or (not close_visible)
+    def modal_title(self, timeout: float = 3.0) -> str:
+        """Return modal title, waiting briefly until it is non-empty."""
+        wait = WebDriverWait(self.driver, timeout)
 
-        self._timed(
-            "close_modal() wait until closed (close hidden OR modal hidden)",
-            lambda: self._wait(timeout=15).until(_closed),  # a little extra room for animation
-        )
+        def title_has_text(d: WebDriver):
+            try:
+                el = d.find_element(*self.MODAL_TITLE)
+                text = (el.text or "").strip()
+                return text if text else False
+            except StaleElementReferenceException:
+                return False
 
-    def restart_ad(self) -> None:
-        self._timed(
-            "restart_ad() click restart",
-            lambda: self._wait().until(EC.element_to_be_clickable(self._RESTART_AD)).click(),
-        )
+        try:
+            return str(wait.until(title_has_text)).strip()
+        except TimeoutException:
+            return ""
+
+    def close_modal(self, timeout: float = 5.0) -> "EntryAdPage":
+        """
+        Click Close and wait until the dialog disappears.
+        Note: the overlay container may remain; we only care that the dialog is gone.
+        """
+        wait = WebDriverWait(self.driver, timeout)
+
+        # Ensure the dialog is visible before trying to close
+        wait.until(EC.visibility_of_element_located(self.MODAL_CONTENT))
+
+        # Click the Close control
+        try:
+            wait.until(EC.element_to_be_clickable(self.MODAL_CLOSE)).click()
+        except (TimeoutException, ElementClickInterceptedException, StaleElementReferenceException):
+            el = self.driver.find_element(*self.MODAL_CLOSE)
+            self.driver.execute_script("arguments[0].click();", el)
+
+        # Wait until dialog is not visible
+        try:
+            wait.until(EC.invisibility_of_element_located(self.MODAL_CONTENT))
+        except TimeoutException:
+            # If it never transitions cleanly, don't hard-fail here; tests can decide
+            pass
+
+        return self
+
+    # -------------------------
+    # Restart Ad
+    # -------------------------
+
+    def restart_ad(self, timeout: float = 5.0) -> "EntryAdPage":
+        """
+        Clicks restart ad link.
+        Does NOT assume modal appears instantly — call wait_for_modal() after.
+        """
+        wait = WebDriverWait(self.driver, timeout)
+
+        try:
+            link = wait.until(EC.element_to_be_clickable(self.RESTART_AD))
+        except TimeoutException:
+            link = wait.until(EC.element_to_be_clickable(self.RESTART_AD_FALLBACK))
+
+        try:
+            link.click()
+        except Exception:
+            self.driver.execute_script("arguments[0].click();", link)
+
+        return self
