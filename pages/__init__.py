@@ -30,12 +30,12 @@ _EXPORTS: dict[str, str] = {
     "IFramePage": "iframe_page",
     "InfiniteScrollPage": "infinite_scroll_page",
     "InputsPage": "inputs_page",
+    "JQueryUIMenuPage": "jqueryui_menu_page",
     "LandingPage": "landing_page",
     "LoginPage": "login_page",
     "NestedFramesPage": "nested_frames_page",
     "SecureAreaPage": "secure_area_page",
     "TinyMceAiDocsPage": "tinymce_ai_docs_page",
-    "JQueryUIMenuPage": "jqueryui_menu_page",
 }
 
 __all__ = sorted(_EXPORTS.keys())
