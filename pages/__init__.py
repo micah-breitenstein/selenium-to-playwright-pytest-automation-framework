@@ -35,6 +35,7 @@ _EXPORTS: dict[str, str] = {
     "NestedFramesPage": "nested_frames_page",
     "SecureAreaPage": "secure_area_page",
     "TinyMceAiDocsPage": "tinymce_ai_docs_page",
+    "JQueryUIMenuPage": "jqueryui_menu_page",
 }
 
 __all__ = sorted(_EXPORTS.keys())
