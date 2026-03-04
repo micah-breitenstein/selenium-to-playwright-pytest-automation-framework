@@ -23,18 +23,18 @@ _EXPORTS: dict[str, str] = {
     "FileUploadPage": "file_upload_page",
     "FloatingMenuPage": "floating_menu_page",
     "ForgotPasswordPage": "forgot_password_page",
+    "GeolocationPage": "geolocation_page",
     "HomePage": "homepage",
+    "HorizontalSliderPage": "horizontal_slider_page",
+    "HoversPage": "hovers_page",
     "IFramePage": "iframe_page",
+    "InfiniteScrollPage": "infinite_scroll_page",
+    "InputsPage": "inputs_page",
     "LandingPage": "landing_page",
     "LoginPage": "login_page",
     "NestedFramesPage": "nested_frames_page",
     "SecureAreaPage": "secure_area_page",
-    "GeolocationPage": "geolocation_page",
-    "HorizontalSliderPage": "horizontal_slider_page",
-    "HoversPage": "hovers_page",
-    "InfiniteScrollPage": "infinite_scroll_page",
     "TinyMceAiDocsPage": "tinymce_ai_docs_page",
-    "InputsPage": "inputs_page",
 }
 
 __all__ = sorted(_EXPORTS.keys())
