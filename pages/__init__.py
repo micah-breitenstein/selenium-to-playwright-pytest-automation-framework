@@ -31,6 +31,7 @@ _EXPORTS: dict[str, str] = {
     "InfiniteScrollPage": "infinite_scroll_page",
     "InputsPage": "inputs_page",
     "JQueryUIMenuPage": "jqueryui_menu_page",
+    "JavaScriptAlertsPage": "javascript_alerts_page",
     "LandingPage": "landing_page",
     "LoginPage": "login_page",
     "NestedFramesPage": "nested_frames_page",
