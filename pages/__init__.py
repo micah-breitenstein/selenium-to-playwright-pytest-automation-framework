@@ -32,6 +32,7 @@ _EXPORTS: dict[str, str] = {
     "InputsPage": "inputs_page",
     "JQueryUIMenuPage": "jqueryui_menu_page",
     "JavaScriptAlertsPage": "javascript_alerts_page",
+    "KeyPressesPage": "key_presses_page",
     "LandingPage": "landing_page",
     "LoginPage": "login_page",
     "NestedFramesPage": "nested_frames_page",
