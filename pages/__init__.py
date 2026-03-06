@@ -32,12 +32,25 @@ _EXPORTS: dict[str, str] = {
     "InputsPage": "inputs_page",
     "JQueryUIMenuPage": "jqueryui_menu_page",
     "JavaScriptAlertsPage": "javascript_alerts_page",
+    "JavaScriptErrorPage": "javascript_error_page",
     "KeyPressesPage": "key_presses_page",
+    "LargeDomPage": "large_dom_page",
     "LandingPage": "landing_page",
     "LoginPage": "login_page",
     "NestedFramesPage": "nested_frames_page",
+    "NotificationMessagePage": "notification_message_page",
+    "RedirectorPage": "redirector_page",
     "SecureAreaPage": "secure_area_page",
+    "SecureFileDownloadPage": "secure_file_download_page",
+    "ShiftingContentImagePage": "shifting_content_image_page",
+    "ShiftingContentListPage": "shifting_content_list_page",
+    "ShiftingContentMenuPage": "shifting_content_menu_page",
+    "ShadowDomPage": "shadow_dom_page",
+    "SlowResourcesPage": "slow_resources_page",
+    "SortableTablesPage": "sortable_tables_page",
+    "StatusCodesPage": "status_codes_page",
     "TinyMceAiDocsPage": "tinymce_ai_docs_page",
+    "WindowsPage": "windows_page",
 }
 
 __all__ = sorted(_EXPORTS.keys())
@@ -74,6 +87,19 @@ if TYPE_CHECKING:
     from .dropdown_page import DropdownPage
     from .dynamic_content_page import DynamicContentPage
     from .dynamic_loading_page import DynamicLoadingPage
+    from .large_dom_page import LargeDomPage
     from .landing_page import LandingPage
+    from .javascript_error_page import JavaScriptErrorPage
     from .login_page import LoginPage
+    from .notification_message_page import NotificationMessagePage
+    from .redirector_page import RedirectorPage
     from .secure_area_page import SecureAreaPage
+    from .secure_file_download_page import SecureFileDownloadPage
+    from .shifting_content_image_page import ShiftingContentImagePage
+    from .shifting_content_list_page import ShiftingContentListPage
+    from .shifting_content_menu_page import ShiftingContentMenuPage
+    from .shadow_dom_page import ShadowDomPage
+    from .slow_resources_page import SlowResourcesPage
+    from .sortable_tables_page import SortableTablesPage
+    from .status_codes_page import StatusCodesPage
+    from .windows_page import WindowsPage
