@@ -18,7 +18,9 @@ class FileDownloadPage(BasePage):
     def open(self) -> "FileDownloadPage":
         self.driver.get(self.config.base_url + self.PATH)
         # Ensure DOM is ready (prevents occasional race)
-        self.wait.until(lambda d: d.execute_script("return document.readyState") == "complete")
+        self.wait.until(
+            lambda d: d.execute_script("return document.readyState") == "complete"
+        )
         self.wait.until(EC.presence_of_all_elements_located(self.FILE_LINKS))
         return self
 

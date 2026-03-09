@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 
 
@@ -10,7 +10,7 @@ class HoversPage:
 
     FIGURES = (By.CSS_SELECTOR, ".figure")
     AVATAR_IN_FIGURE = (By.CSS_SELECTOR, "img")
-    CAPTION_IN_FIGURE = (By.CSS_SELECTOR, ".figcaption")   # <-- keep this
+    CAPTION_IN_FIGURE = (By.CSS_SELECTOR, ".figcaption")  # <-- keep this
     NAME_IN_CAPTION = (By.CSS_SELECTOR, ".figcaption h5")
     LINK_IN_CAPTION = (By.CSS_SELECTOR, ".figcaption a")
 
@@ -30,7 +30,9 @@ class HoversPage:
         wait.until(lambda d: len(d.find_elements(*self.FIGURES)) >= 3)
 
         figures = self.driver.find_elements(*self.FIGURES)
-        assert 0 <= idx < len(figures), f"User index out of range: {user_index_1_based} (found {len(figures)} figures)"
+        assert 0 <= idx < len(figures), (
+            f"User index out of range: {user_index_1_based} (found {len(figures)} figures)"
+        )
 
         figure = figures[idx]
 
@@ -42,7 +44,9 @@ class HoversPage:
         ActionChains(self.driver).move_to_element(avatar).pause(0.15).perform()
 
         # Wait for caption to become visible
-        wait.until(lambda d: figure.find_element(*self.CAPTION_IN_FIGURE).is_displayed())
+        wait.until(
+            lambda d: figure.find_element(*self.CAPTION_IN_FIGURE).is_displayed()
+        )
 
         return self
 

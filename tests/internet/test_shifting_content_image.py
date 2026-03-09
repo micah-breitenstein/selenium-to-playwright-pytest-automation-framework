@@ -22,14 +22,18 @@ def test_shifting_content_image_random_mode(driver, base_url):
 
 
 def test_shifting_content_image_pixel_shift_mode(driver, base_url):
-    page = ShiftingContentImagePage(driver, base_url=base_url).load_with_pixel_shift(100)
+    page = ShiftingContentImagePage(driver, base_url=base_url).load_with_pixel_shift(
+        100
+    )
 
     assert "/img/avatar.jpg" in page.image_src()
     assert "pixel_shift=100" in page.current_url()
 
 
 def test_shifting_content_image_random_and_pixel_shift_mode(driver, base_url):
-    page = ShiftingContentImagePage(driver, base_url=base_url).load_random_with_pixel_shift(100)
+    page = ShiftingContentImagePage(
+        driver, base_url=base_url
+    ).load_random_with_pixel_shift(100)
 
     assert "/img/avatar.jpg" in page.image_src()
     current = page.current_url()

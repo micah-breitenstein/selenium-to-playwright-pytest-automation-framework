@@ -58,7 +58,9 @@ class NestedFramesPage:
         def read_middle() -> str:
             # Middle frame has <div id="content">MIDDLE</div>
             if self.driver.find_elements(*self.MIDDLE_CONTENT):
-                return " ".join(self.driver.find_element(*self.MIDDLE_CONTENT).text.split())
+                return " ".join(
+                    self.driver.find_element(*self.MIDDLE_CONTENT).text.split()
+                )
             return self._body_text()
 
         return self._in_frames("frame-top", "frame-middle", fn=read_middle)

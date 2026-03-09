@@ -1,4 +1,5 @@
 from pathlib import Path
+
 from pages import FileUploadPage
 
 ORIGINAL_FILE = Path("test_file/LAKETAHOECAVEROCK.JPG")

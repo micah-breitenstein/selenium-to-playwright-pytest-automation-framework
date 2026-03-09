@@ -29,7 +29,10 @@ class JQueryUIMenuPage:
     CSV = (By.XPATH, "//*[@id='menu']//a[normalize-space()='CSV']")
     EXCEL = (By.XPATH, "//*[@id='menu']//a[normalize-space()='Excel']")
 
-    BACK_TO_JQUERY = (By.XPATH, "//*[@id='menu']//a[normalize-space()='Back to JQuery UI']")
+    BACK_TO_JQUERY = (
+        By.XPATH,
+        "//*[@id='menu']//a[normalize-space()='Back to JQuery UI']",
+    )
 
     def url(self) -> str:
         return f"{self.base_url.rstrip('/')}{self.PATH}"

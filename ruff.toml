@@ -2,6 +2,10 @@
 select = ["E", "F", "W", "I"]
 ignore = ["E501"]  # allow long lines
 
+[lint.per-file-ignores]
+"pages/__init__.py" = ["F401"]            # TYPE_CHECKING re-exports
+"pages/internet/__init__.py" = ["F401"]   # TYPE_CHECKING re-exports
+
 [lint.isort]
 known-first-party = ["pages"]
 

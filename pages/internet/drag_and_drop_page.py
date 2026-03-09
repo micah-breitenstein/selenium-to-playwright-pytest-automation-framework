@@ -1,7 +1,7 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 
 
 class DragAndDropPage:
@@ -30,7 +30,7 @@ class DragAndDropPage:
     def swap_columns_html5(self) -> None:
         before = self.header_texts()
 
-        left = self.driver.find_element(*self.COLUMN_A)   # left column container
+        left = self.driver.find_element(*self.COLUMN_A)  # left column container
         right = self.driver.find_element(*self.COLUMN_B)  # right column container
 
         self.driver.execute_script(
@@ -50,7 +50,8 @@ class DragAndDropPage:
             fire('drop', dst);
             fire('dragend', src);
             """,
-            left, right
+            left,
+            right,
         )
 
         # Wait until the headers swap relative to before

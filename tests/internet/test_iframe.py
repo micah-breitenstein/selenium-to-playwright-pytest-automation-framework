@@ -1,6 +1,8 @@
 import logging
+
 import pytest
 from selenium.webdriver.remote.webdriver import WebDriver
+
 from pages import IFramePage
 
 log = logging.getLogger(__name__)
@@ -24,7 +26,9 @@ def test_iframe_initial_text(driver: WebDriver, base_url: str) -> None:
     assert "Your content goes here." in text
 
 
-def test_iframe_text_can_be_updated_or_is_read_only(driver: WebDriver, base_url: str) -> None:
+def test_iframe_text_can_be_updated_or_is_read_only(
+    driver: WebDriver, base_url: str
+) -> None:
     """
     Attempts to update the TinyMCE editor text.
     On the public demo site, TinyMCE may be read-only due to quota/disabled state.

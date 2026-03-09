@@ -43,4 +43,6 @@ class ShiftingContentMenuPage(BasePage):
 
     def menu_items(self) -> list[str]:
         links = self.find_all(self.MENU_LINKS)
-        return [(link.text or "").strip() for link in links if (link.text or "").strip()]
+        return [
+            (link.text or "").strip() for link in links if (link.text or "").strip()
+        ]

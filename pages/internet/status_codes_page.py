@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 
 from pages.core.base_page import BasePage
 
@@ -37,9 +37,7 @@ class StatusCodesPage(BasePage):
         # Wait for old element to go stale (proves DOM reloaded)
         WebDriverWait(self.driver, 10).until(EC.staleness_of(old_p))
         # Now wait for the new page's content
-        WebDriverWait(self.driver, 10).until(
-            EC.url_contains(f"/status_codes/{code}")
-        )
+        WebDriverWait(self.driver, 10).until(EC.url_contains(f"/status_codes/{code}"))
         self.wait_visible(self.RESULT_TEXT)
         return self
 

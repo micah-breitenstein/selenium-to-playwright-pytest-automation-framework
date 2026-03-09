@@ -29,7 +29,9 @@ class ShadowDomPage(BasePage):
         """
         hosts = self.find_all(self.SHADOW_HOST)
         if index >= len(hosts):
-            raise IndexError(f"Shadow host index {index} out of range (found {len(hosts)})")
+            raise IndexError(
+                f"Shadow host index {index} out of range (found {len(hosts)})"
+            )
         return hosts[index].shadow_root
 
     def get_shadow_text(self, index: int = 0) -> str:

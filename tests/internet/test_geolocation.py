@@ -1,10 +1,7 @@
 # tests/test_geolocation.py
 import pytest
-
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-
 
 GEO_URL = "https://the-internet.herokuapp.com/geolocation"
 
@@ -18,7 +15,10 @@ def test_geolocation_shows_mocked_coords(driver):
     # 1) Grant permission for this origin (prevents prompt from blocking)
     driver.execute_cdp_cmd(
         "Browser.grantPermissions",
-        {"origin": "https://the-internet.herokuapp.com", "permissions": ["geolocation"]},
+        {
+            "origin": "https://the-internet.herokuapp.com",
+            "permissions": ["geolocation"],
+        },
     )
 
     # 2) Override location

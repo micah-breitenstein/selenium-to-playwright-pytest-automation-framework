@@ -3,10 +3,11 @@ from __future__ import annotations
 from selenium.webdriver.common.by import By
 
 from pages.core.base_page import BasePage
-from .login_page import LoginPage
+
 from .checkboxes_page import CheckboxesPage
 from .dropdown_page import DropdownPage
 from .dynamic_loading_page import DynamicLoadingPage
+from .login_page import LoginPage
 
 
 class LandingPage(BasePage):

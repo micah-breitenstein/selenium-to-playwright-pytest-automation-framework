@@ -16,7 +16,9 @@ class ExitIntentPage(BasePage):
     def open(self):
         self.driver.get(self.config.base_url + self.PATH)
         # Avoid racing the JS that registers the exit-intent listeners
-        self.wait.until(lambda d: d.execute_script("return document.readyState") == "complete")
+        self.wait.until(
+            lambda d: d.execute_script("return document.readyState") == "complete"
+        )
         return self
 
     def trigger_exit_intent(self):

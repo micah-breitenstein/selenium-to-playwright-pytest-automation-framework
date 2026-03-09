@@ -3,16 +3,15 @@ from __future__ import annotations
 import hashlib
 from dataclasses import dataclass
 
-from selenium.webdriver.common.by import By
-from selenium.webdriver.remote.webdriver import WebDriver
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import (
-    TimeoutException,
-    StaleElementReferenceException,
     ElementClickInterceptedException,
     NoSuchElementException,
+    StaleElementReferenceException,
 )
+from selenium.webdriver.common.by import By
+from selenium.webdriver.remote.webdriver import WebDriver
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 
 
 @dataclass
@@ -168,7 +167,9 @@ class ChallengingDomPage:
     def rows(self):
         return self.driver.find_elements(*self.TABLE_ROWS)
 
-    def click_delete_by_column_text(self, column_index: int, expected_text: str) -> None:
+    def click_delete_by_column_text(
+        self, column_index: int, expected_text: str
+    ) -> None:
         """
         column_index is 0-based
         Retry once if the table redraws mid-iteration (stale row).
@@ -190,8 +191,13 @@ class ChallengingDomPage:
                             link = row.find_element(By.LINK_TEXT, "delete")
                             try:
                                 link.click()
-                            except (ElementClickInterceptedException, StaleElementReferenceException):
-                                self.driver.execute_script("arguments[0].click();", link)
+                            except (
+                                ElementClickInterceptedException,
+                                StaleElementReferenceException,
+                            ):
+                                self.driver.execute_script(
+                                    "arguments[0].click();", link
+                                )
                             return
                     except StaleElementReferenceException:
                         # row went stale during redraw; break to outer retry

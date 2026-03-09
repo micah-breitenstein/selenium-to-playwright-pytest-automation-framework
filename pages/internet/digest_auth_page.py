@@ -1,5 +1,6 @@
 from selenium.webdriver.remote.webdriver import WebDriver
 
+
 class DigestAuthPage:
     URL_PATH = "/digest_auth"
     # credentials baked into the URL
@@ -13,9 +14,7 @@ class DigestAuthPage:
 
     def open(self):
         auth_url = self.AUTH_URL_TEMPLATE.format(
-            user=self.user,
-            pw=self.pw,
-            path=self.URL_PATH
+            user=self.user, pw=self.pw, path=self.URL_PATH
         )
         self.driver.get(auth_url)
 

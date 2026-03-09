@@ -18,6 +18,7 @@ def test_gallery_menu_item_is_optional(driver, base_url):
     # This should never fail: Gallery may or may not exist on a given load
     _ = page.has_menu_item("Gallery")
 
+
 def test_gallery_eventually_appears_demo(driver, base_url):
     page = DisappearingElementsPage(driver, base_url)
     page.open()

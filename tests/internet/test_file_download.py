@@ -1,5 +1,4 @@
 import logging
-import pytest
 import re
 
 from pages import FileDownloadPage

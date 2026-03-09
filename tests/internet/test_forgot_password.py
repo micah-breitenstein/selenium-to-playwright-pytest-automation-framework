@@ -1,5 +1,5 @@
-import pytest
 from pages import ForgotPasswordPage
+
 
 def test_forgot_password_submit_shows_known_outcome(driver, base_url):
     """

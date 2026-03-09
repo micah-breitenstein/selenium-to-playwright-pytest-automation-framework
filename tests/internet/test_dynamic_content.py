@@ -1,7 +1,6 @@
 from pages import DynamicContentPage
 
 
-
 def test_dynamic_content_has_rows(driver, base_url):
     page = DynamicContentPage(driver, base_url=base_url)
     page.open_page()
@@ -10,7 +9,9 @@ def test_dynamic_content_has_rows(driver, base_url):
     assert page.row_count() >= 3, f"Expected at least 3 rows, got {page.row_count()}"
 
     texts = page.rows_text()
-    assert all(t.strip() for t in texts), f"Expected non-empty text in all rows, got: {texts}"
+    assert all(t.strip() for t in texts), (
+        f"Expected non-empty text in all rows, got: {texts}"
+    )
 
 
 def test_dynamic_content_changes_after_refresh(driver, base_url):
@@ -46,7 +47,9 @@ def test_dynamic_content_static_mode_most_text_stays_same(driver, base_url):
         same_count = sum(1 for b, a in pairs if b == a)
 
         # Expect at least 2 rows to remain identical (tune if needed)
-        assert same_count >= 2, f"Expected most static rows to stay same. same_count={same_count}\nBefore={before}\nAfter={after}"
+        assert same_count >= 2, (
+            f"Expected most static rows to stay same. same_count={same_count}\nBefore={before}\nAfter={after}"
+        )
 
 
 def test_dynamic_content_dynamic_mode_text_changes(driver, base_url):
@@ -65,4 +68,6 @@ def test_dynamic_content_dynamic_mode_text_changes(driver, base_url):
             changed = True
             break
 
-    assert changed, f"Expected dynamic text to change within 5 refreshes. Before={before}, Last={last}"
+    assert changed, (
+        f"Expected dynamic text to change within 5 refreshes. Before={before}, Last={last}"
+    )

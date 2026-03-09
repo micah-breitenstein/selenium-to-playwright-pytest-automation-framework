@@ -1,6 +1,7 @@
 # pages/geolocation_page.py
 from selenium.webdriver.common.by import By
 
+
 class GeolocationPage:
     URL_PATH = "/geolocation"
     BTN = (By.CSS_SELECTOR, "#content button")

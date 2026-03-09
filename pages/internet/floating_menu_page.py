@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 
 
 class FloatingMenuPage:
@@ -17,7 +17,9 @@ class FloatingMenuPage:
 
     def open(self) -> "FloatingMenuPage":
         self.driver.get(f"{self.base_url}{self.PATH}")
-        WebDriverWait(self.driver, 10).until(EC.visibility_of_element_located(self.MENU))
+        WebDriverWait(self.driver, 10).until(
+            EC.visibility_of_element_located(self.MENU)
+        )
         return self
 
     def menu_is_displayed(self) -> bool:
@@ -37,7 +39,7 @@ class FloatingMenuPage:
 
     def current_hash(self) -> str:
         return self.driver.execute_script("return window.location.hash;") or ""
-    
+
     def scroll_to_bottom(self) -> None:
         self.driver.execute_script("""
             window.scrollTo(0, Math.max(

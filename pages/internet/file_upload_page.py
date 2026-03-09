@@ -1,13 +1,13 @@
 from __future__ import annotations
 
-from pathlib import Path
 import shutil
-import uuid
 import tempfile
+import uuid
+from pathlib import Path
 
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 
 
 class FileUploadPage:
@@ -32,9 +32,7 @@ class FileUploadPage:
 
     # 🔥 New method: upload with unique filename
     def upload_file_with_unique_name(
-        self,
-        original_file: Path | str,
-        upload_timeout: int = 30
+        self, original_file: Path | str, upload_timeout: int = 30
     ) -> str:
         original = Path(original_file)
         if not original.exists():

@@ -1,6 +1,6 @@
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 
 
 class HomePage:
@@ -17,7 +17,5 @@ class HomePage:
         self.driver.get(self.URL)
 
     def get_heading_text(self):
-        element = self.wait.until(
-            EC.visibility_of_element_located(self.HEADING)
-        )
+        element = self.wait.until(EC.visibility_of_element_located(self.HEADING))
         return element.text

@@ -1,16 +1,16 @@
 # conftest.py
+import logging
 import os
 import time
-import pytest
-import logging
-
 from datetime import datetime
+
+import pytest
 from selenium import webdriver
 from selenium.common.exceptions import (
     InvalidSessionIdException,
+    NoSuchWindowException,
     SessionNotCreatedException,
     WebDriverException,
-    NoSuchWindowException,
 )
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
@@ -112,7 +112,9 @@ def _create_remote(request):
     sauce_user = os.getenv("SAUCE_USERNAME")
     sauce_key = os.getenv("SAUCE_ACCESS_KEY")
     if not sauce_user or not sauce_key:
-        raise RuntimeError("Set SAUCE_USERNAME and SAUCE_ACCESS_KEY environment variables")
+        raise RuntimeError(
+            "Set SAUCE_USERNAME and SAUCE_ACCESS_KEY environment variables"
+        )
 
     platform = request.config.getoption("--platform")
     browser_version = request.config.getoption("--browser-version")
@@ -151,7 +153,9 @@ def _create_remote(request):
             if "concurrent session limit" in str(exc) and attempt < max_retries:
                 log.warning(
                     "Concurrent session limit hit (attempt %d/%d) – retrying in %ds …",
-                    attempt, max_retries, retry_delay,
+                    attempt,
+                    max_retries,
+                    retry_delay,
                 )
                 time.sleep(retry_delay)
             else:
@@ -177,7 +181,9 @@ def _create_local_chrome(request, chrome_service):
     return webdriver.Chrome(service=chrome_service, options=options)
 
 
-def _create_local_safari_with_retry(base_url: str, attempts: int = 3, delay_s: float = 0.6):
+def _create_local_safari_with_retry(
+    base_url: str, attempts: int = 3, delay_s: float = 0.6
+):
     """
     SafariDriver can sometimes hand out a session id but immediately invalidate it.
     We validate by issuing a trivial command right away. If it fails, retry.
@@ -281,7 +287,9 @@ def driver(request, base_url):
         yield drv
         return
 
-    raise ValueError("Local runs support --browser=chrome or --browser=safari (remote supports chrome|firefox|edge)")
+    raise ValueError(
+        "Local runs support --browser=chrome or --browser=safari (remote supports chrome|firefox|edge)"
+    )
 
 
 # -------------------------
@@ -292,7 +300,9 @@ def _reset_between_tests(driver, base_url, request):
     browser = request.config.getoption("--browser")
     try:
         driver.delete_all_cookies()
-        driver.execute_script("window.localStorage.clear(); window.sessionStorage.clear();")
+        driver.execute_script(
+            "window.localStorage.clear(); window.sessionStorage.clear();"
+        )
 
         # Safari can be touchy about about:blank; take it home instead.
         if browser == "safari":
@@ -313,12 +323,14 @@ def _reset_between_tests(driver, base_url, request):
 def page(driver, base_url):
     def _make(PageClass, *args, **kwargs):
         return PageClass(driver, base_url=base_url, *args, **kwargs)
+
     return _make
 
 
 @pytest.fixture
 def landing(driver, base_url):
     from pages.internet.landing_page import LandingPage
+
     return LandingPage(driver, base_url=base_url)
 
 
@@ -381,6 +393,7 @@ def pytest_configure(config):
         os.environ["BASE_URL"] = explicit
     else:
         from config.sites import SITES as _sites
+
         site = config.getoption("--site")
         os.environ["BASE_URL"] = _sites.get(site, "")
 
@@ -412,7 +425,9 @@ def pytest_collection_modifyitems(config, items):
     ``tests/internet/`` are skipped when ``--site=saucedemo``.
     """
     site = config.getoption("--site")
-    skip_wrong_site = pytest.mark.skip(reason=f"test belongs to a different site (--site={site})")
+    skip_wrong_site = pytest.mark.skip(
+        reason=f"test belongs to a different site (--site={site})"
+    )
 
     for item in items:
         # Determine which site directory this test lives under.

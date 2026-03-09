@@ -2,15 +2,15 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from selenium.common.exceptions import (
+    ElementClickInterceptedException,
+    StaleElementReferenceException,
+    TimeoutException,
+)
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import (
-    TimeoutException,
-    StaleElementReferenceException,
-    ElementClickInterceptedException,
-)
+from selenium.webdriver.support.ui import WebDriverWait
 
 
 @dataclass
@@ -110,7 +110,11 @@ class EntryAdPage:
         # Click the Close control
         try:
             wait.until(EC.element_to_be_clickable(self.MODAL_CLOSE)).click()
-        except (TimeoutException, ElementClickInterceptedException, StaleElementReferenceException):
+        except (
+            TimeoutException,
+            ElementClickInterceptedException,
+            StaleElementReferenceException,
+        ):
             el = self.driver.find_element(*self.MODAL_CLOSE)
             self.driver.execute_script("arguments[0].click();", el)
 

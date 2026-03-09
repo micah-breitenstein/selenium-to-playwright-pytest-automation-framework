@@ -1,4 +1,5 @@
 import pytest
+
 from pages import EntryAdPage  # lazy-loaded via pages/__init__.py
 
 
@@ -39,7 +40,9 @@ def test_restart_ad_triggers_modal_again(driver, base_url):
         # one cheap retry
         page.restart_ad()
         if not page.modal_is_visible(timeout=2):
-            pytest.skip("Entry Ad modal did not re-appear after restart (demo-site flake/state).")
+            pytest.skip(
+                "Entry Ad modal did not re-appear after restart (demo-site flake/state)."
+            )
         page.wait_for_modal(timeout=5)
 
     page.close_modal()

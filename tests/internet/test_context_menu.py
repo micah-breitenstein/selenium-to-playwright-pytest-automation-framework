@@ -1,5 +1,6 @@
 import pytest
 from selenium.common.exceptions import NoAlertPresentException
+
 from pages import ContextMenuPage
 
 

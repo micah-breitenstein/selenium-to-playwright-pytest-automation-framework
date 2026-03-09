@@ -1,16 +1,15 @@
 from __future__ import annotations
 
-import time
 import logging
-
+import time
 from dataclasses import dataclass
 from typing import Any
 from urllib.parse import urljoin
 
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 
 # Type alias for Selenium locator tuples, e.g. (By.ID, "username")
 Locator = tuple[str, str]
@@ -131,7 +130,9 @@ class BasePage:
             self.log.info(f"NOT VISIBLE ✗ {locator}")
             return False
 
-    def wait_any(self, locator_a: Locator, locator_b: Locator, timeout: int = 10) -> str:
+    def wait_any(
+        self, locator_a: Locator, locator_b: Locator, timeout: int = 10
+    ) -> str:
         """
         Wait until either locator_a or locator_b is visible.
         Returns "first" if locator_a wins, "second" if locator_b wins.
@@ -186,7 +187,9 @@ class BasePage:
     # -------------------------
     # Debugging
     # -------------------------
-    def highlight(self, locator: Locator, color: str = "red", duration: float = 0.5) -> WebElement:
+    def highlight(
+        self, locator: Locator, color: str = "red", duration: float = 0.5
+    ) -> WebElement:
         """Briefly highlight an element with a colored border for visual debugging."""
         el = self.wait_visible(locator)
         original = el.value_of_css_property("border")
@@ -195,6 +198,7 @@ class BasePage:
         )
         if duration:
             import time
+
             time.sleep(duration)
             self.driver.execute_script(
                 "arguments[0].style.border = arguments[1];", el, original

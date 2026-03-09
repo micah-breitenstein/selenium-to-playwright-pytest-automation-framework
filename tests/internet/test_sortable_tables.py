@@ -4,7 +4,6 @@ import pytest
 
 from pages import SortableTablesPage
 
-
 SORTABLE_COLUMNS = ["Last Name", "First Name", "Email", "Due", "Web Site"]
 
 
@@ -62,6 +61,7 @@ def test_sort_descending(driver, base_url, table_id, column):
 
 
 # ---- Action link tests ----
+
 
 @pytest.mark.parametrize("table_id", [1, 2])
 def test_edit_link_updates_url(driver, base_url, table_id):

@@ -16,7 +16,9 @@ class IFramePage:
 
     def open(self, timeout: int = 15) -> "IFramePage":
         self.driver.get(f"{self.base_url}{self.PATH}")
-        WebDriverWait(self.driver, timeout).until(lambda d: d.find_element(*self.EDITOR_IFRAME))
+        WebDriverWait(self.driver, timeout).until(
+            lambda d: d.find_element(*self.EDITOR_IFRAME)
+        )
         return self
 
     def is_read_only(self, timeout: int = 10) -> bool:

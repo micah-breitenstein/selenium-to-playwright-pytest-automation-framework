@@ -2,6 +2,7 @@
 """
 Fixtures specific to the-internet.herokuapp.com test suite.
 """
+
 from __future__ import annotations
 
 import pytest

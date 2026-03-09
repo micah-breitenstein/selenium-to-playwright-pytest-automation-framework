@@ -1,4 +1,5 @@
 from selenium.webdriver.common.by import By
+
 from pages.core.base_page import BasePage
 
 
@@ -43,4 +44,4 @@ class DynamicContentPage(BasePage):
         self.wait_visible(self.ALL_ROWS)
 
     def row_count(self) -> int:
-        return len(self.rows_text())    
+        return len(self.rows_text())

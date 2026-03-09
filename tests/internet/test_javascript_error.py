@@ -16,8 +16,9 @@ def test_javascript_error_page_has_js_error(driver, base_url):
     errors = page.javascript_error_messages()
     assert len(errors) >= 1, "Expected at least one JS error message"
     # The page throws "Cannot read properties of undefined (reading 'xyz')" or similar
-    assert any("undefined" in msg.lower() or "error" in msg.lower() for msg in errors), \
-        f"Expected JS error about undefined, got: {errors}"
+    assert any(
+        "undefined" in msg.lower() or "error" in msg.lower() for msg in errors
+    ), f"Expected JS error about undefined, got: {errors}"
 
 
 @pytest.mark.no_safari

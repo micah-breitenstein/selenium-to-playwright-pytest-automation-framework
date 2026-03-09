@@ -6,8 +6,8 @@ import requests
 from requests.auth import HTTPBasicAuth
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 
 
 class SecureFileDownloadPage:
@@ -21,7 +21,9 @@ class SecureFileDownloadPage:
         self.base_url = base_url.rstrip("/")
         self.wait = WebDriverWait(driver, timeout)
 
-    def open_with_credentials(self, username: str, password: str) -> "SecureFileDownloadPage":
+    def open_with_credentials(
+        self, username: str, password: str
+    ) -> "SecureFileDownloadPage":
         """Open the page with basic auth credentials embedded in URL."""
         protocol, rest = self.base_url.split("://")
         auth_url = f"{protocol}://{username}:{password}@{rest}{self.URL_PATH}"

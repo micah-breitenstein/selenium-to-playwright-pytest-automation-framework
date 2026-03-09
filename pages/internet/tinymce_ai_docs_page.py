@@ -25,7 +25,10 @@ class TinyMceAiDocsPage:
 
     # TinyMCE UI / editor locators (inside the demo iframe)
     TOOLBAR_BOLD = (By.CSS_SELECTOR, "button[aria-label='Bold'], button[title='Bold']")
-    TOOLBAR_ITALIC = (By.CSS_SELECTOR, "button[aria-label='Italic'], button[title='Italic']")
+    TOOLBAR_ITALIC = (
+        By.CSS_SELECTOR,
+        "button[aria-label='Italic'], button[title='Italic']",
+    )
     EDIT_IFRAME = (By.CSS_SELECTOR, "iframe.tox-edit-area__iframe")
     EDITOR_BODY = (By.CSS_SELECTOR, "body#tinymce")
 
@@ -40,9 +43,13 @@ class TinyMceAiDocsPage:
         wait = WebDriverWait(self.driver, timeout)
 
         container = wait.until(lambda d: d.find_element(*self.LIVE_DEMO_CONTAINER))
-        self.driver.execute_script("arguments[0].scrollIntoView({block:'center'});", container)
+        self.driver.execute_script(
+            "arguments[0].scrollIntoView({block:'center'});", container
+        )
 
-        outer = wait.until(lambda d: container.find_element(*self.OUTER_IFRAME_IN_CONTAINER))
+        outer = wait.until(
+            lambda d: container.find_element(*self.OUTER_IFRAME_IN_CONTAINER)
+        )
         self.driver.switch_to.frame(outer)
 
         # best-effort; harmless if not present
@@ -53,14 +60,22 @@ class TinyMceAiDocsPage:
     # -------------------------
     # Assertions
     # -------------------------
-    def assert_phrase_in_editor(self, phrase: str, timeout: int = 20) -> "TinyMceAiDocsPage":
+    def assert_phrase_in_editor(
+        self, phrase: str, timeout: int = 20
+    ) -> "TinyMceAiDocsPage":
         found = self._find_frame_containing_phrase(phrase, timeout=timeout)
-        assert found, f"Could not find phrase in demo iframe or its child frames: {phrase!r}"
+        assert found, (
+            f"Could not find phrase in demo iframe or its child frames: {phrase!r}"
+        )
         return self
 
-    def assert_html_contains_any(self, needles: list[str], timeout: int = 20) -> "TinyMceAiDocsPage":
+    def assert_html_contains_any(
+        self, needles: list[str], timeout: int = 20
+    ) -> "TinyMceAiDocsPage":
         html = self.editor_html(timeout=timeout)
-        assert any(n in html for n in needles), f"None of {needles!r} found in editor HTML."
+        assert any(n in html for n in needles), (
+            f"None of {needles!r} found in editor HTML."
+        )
         return self
 
     # -------------------------
@@ -106,15 +121,15 @@ class TinyMceAiDocsPage:
     def format_bold(self, text: str, timeout: int = 20) -> "TinyMceAiDocsPage":
         return (
             self.set_plain_text(text, timeout=timeout)
-                .select_all_in_editor(timeout=timeout)
-                .click_bold(timeout=timeout)
+            .select_all_in_editor(timeout=timeout)
+            .click_bold(timeout=timeout)
         )
 
     def format_italic(self, text: str, timeout: int = 20) -> "TinyMceAiDocsPage":
         return (
             self.set_plain_text(text, timeout=timeout)
-                .select_all_in_editor(timeout=timeout)
-                .click_italic(timeout=timeout)
+            .select_all_in_editor(timeout=timeout)
+            .click_italic(timeout=timeout)
         )
 
     # -------------------------

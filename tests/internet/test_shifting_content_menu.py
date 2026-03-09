@@ -1,6 +1,5 @@
 from pages import ShiftingContentMenuPage
 
-
 EXPECTED_MENU_ITEMS = ["Home", "About", "Contact Us", "Portfolio", "Gallery"]
 
 
@@ -32,7 +31,9 @@ def test_shifting_content_menu_items_pixel_shift_mode(driver, base_url):
 
 
 def test_shifting_content_menu_items_random_and_pixel_shift_mode(driver, base_url):
-    page = ShiftingContentMenuPage(driver, base_url=base_url).load_random_with_pixel_shift(100)
+    page = ShiftingContentMenuPage(
+        driver, base_url=base_url
+    ).load_random_with_pixel_shift(100)
 
     assert page.menu_items() == EXPECTED_MENU_ITEMS
     current = page.current_url()

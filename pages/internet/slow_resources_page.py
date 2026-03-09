@@ -15,9 +15,7 @@ class SlowResourcesPage(BasePage):
     DESCRIPTION = (By.CSS_SELECTOR, "#content .example p")
 
     # JS snippet: returns True when jQuery has no active AJAX requests
-    _AJAX_DONE_JS = (
-        "return (typeof jQuery !== 'undefined') && (jQuery.active === 0);"
-    )
+    _AJAX_DONE_JS = "return (typeof jQuery !== 'undefined') && (jQuery.active === 0);"
 
     def _wait_for_ajax(self, timeout: int = 45) -> None:
         """Wait until the background $.get('/slow_external') finishes."""

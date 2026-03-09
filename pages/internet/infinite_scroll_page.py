@@ -29,7 +29,9 @@ class InfiniteScrollPage:
     def _scroll_to_bottom(self) -> None:
         self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
 
-    def load_blocks(self, target_blocks: int = 3, timeout: int = 10, max_scrolls: int = 40) -> "InfiniteScrollPage":
+    def load_blocks(
+        self, target_blocks: int = 3, timeout: int = 10, max_scrolls: int = 40
+    ) -> "InfiniteScrollPage":
         """
         Scroll until we have at least target_blocks blocks.
         Uses 2 signals to avoid flake:
@@ -50,7 +52,8 @@ class InfiniteScrollPage:
             wait.until(
                 lambda d: (
                     len(d.find_elements(*self.BLOCKS)) > current_blocks
-                    or int(d.execute_script("return document.body.scrollHeight;")) > current_height
+                    or int(d.execute_script("return document.body.scrollHeight;"))
+                    > current_height
                 )
             )
 

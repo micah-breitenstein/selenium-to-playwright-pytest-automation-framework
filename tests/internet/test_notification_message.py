@@ -11,7 +11,9 @@ def test_notification_message_appears(driver, base_url):
 
     # The demo site randomly shows one of these messages
     valid_messages = ["Action successful", "Action unsuccesful, please try again"]
-    assert any(msg in text for msg in valid_messages), f"Unexpected notification: {text!r}"
+    assert any(msg in text for msg in valid_messages), (
+        f"Unexpected notification: {text!r}"
+    )
 
 
 def test_notification_message_changes_on_click(driver, base_url):

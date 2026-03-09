@@ -13,7 +13,6 @@ from typing import TYPE_CHECKING, Any
 # New sites (saucedemo, demoqa) should be imported from their own sub-package:
 #     from pages.saucedemo import SauceDemoLoginPage
 # ---------------------------------------------------------------------------
-
 # Delegate to pages.internet for the "internet" site page objects
 from pages.internet import _EXPORTS, __all__  # noqa: F401
 

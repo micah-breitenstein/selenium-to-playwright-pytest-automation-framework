@@ -1,7 +1,7 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 
 
 class BasicAuthPage:
@@ -20,7 +20,5 @@ class BasicAuthPage:
         self.driver.get(auth_url)
 
     def get_message(self) -> str:
-        el = self.wait.until(
-            EC.visibility_of_element_located(self.MESSAGE)
-        )
+        el = self.wait.until(EC.visibility_of_element_located(self.MESSAGE))
         return el.text.strip()

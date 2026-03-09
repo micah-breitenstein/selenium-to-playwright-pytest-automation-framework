@@ -3,7 +3,6 @@ from __future__ import annotations
 import time
 
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
 
 from pages.core.base_page import BasePage
 
@@ -118,10 +117,4 @@ class SortableTablesPage(BasePage):
         """Click the 'delete' link in the given row and return the current URL."""
         cell = self._action_cell(row, table_id)
         cell.find_element(By.LINK_TEXT, "delete").click()
-        return self.driver.current_url
-
-    def current_url(self) -> str:
-        return self.driver.current_url
-
-    def current_url(self) -> str:
         return self.driver.current_url

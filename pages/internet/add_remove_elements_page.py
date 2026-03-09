@@ -1,7 +1,7 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 
 
 class AddRemoveElementsPage:
@@ -27,10 +27,14 @@ class AddRemoveElementsPage:
         return len(self.driver.find_elements(*self.DELETE_BUTTONS))
 
     def wait_for_delete_count(self, expected: int) -> None:
-        self.wait.until(lambda d: len(d.find_elements(*self.DELETE_BUTTONS)) == expected)
+        self.wait.until(
+            lambda d: len(d.find_elements(*self.DELETE_BUTTONS)) == expected
+        )
 
     def click_delete_at_index(self, index: int = 0) -> None:
         buttons = self.driver.find_elements(*self.DELETE_BUTTONS)
         if index < 0 or index >= len(buttons):
-            raise IndexError(f"Delete button index {index} out of range (count={len(buttons)})")
+            raise IndexError(
+                f"Delete button index {index} out of range (count={len(buttons)})"
+            )
         buttons[index].click()
