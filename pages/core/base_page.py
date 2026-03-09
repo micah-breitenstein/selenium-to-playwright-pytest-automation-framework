@@ -60,6 +60,19 @@ class BasePage:
         self.driver.get(url)
 
     # -------------------------
+    # Properties
+    # -------------------------
+    @property
+    def current_url(self) -> str:
+        """Return the browser's current URL."""
+        return self.driver.current_url
+
+    @property
+    def page_title(self) -> str:
+        """Return the current page title."""
+        return self.driver.title
+
+    # -------------------------
     # Wait Helpers
     # -------------------------
     def wait_visible(self, locator):
