@@ -1,0 +1,35 @@
+.PHONY: install test test-headless test-parallel lint format clean help
+
+SITE     ?= internet
+BROWSER  ?= chrome
+PYTEST   := python -m pytest
+
+help: ## Show available targets
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | \
+		awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-18s\033[0m %s\n", $$1, $$2}'
+
+install: ## Install project dependencies
+	pip install -r requirements.txt
+
+test: ## Run tests (default: chrome, headed)
+	$(PYTEST) --site=$(SITE) --browser=$(BROWSER)
+
+test-headless: ## Run tests in headless Chrome
+	$(PYTEST) --site=$(SITE) --browser=chrome --headless
+
+test-parallel: ## Run tests in parallel headless Chrome
+	$(PYTEST) -n auto --site=$(SITE) --browser=chrome --headless
+
+test-safari: ## Run tests in Safari (serial only)
+	$(PYTEST) --site=$(SITE) --browser=safari
+
+lint: ## Run ruff linter
+	ruff check .
+
+format: ## Auto-format code with ruff
+	ruff format .
+	ruff check --fix .
+
+clean: ## Remove caches and artifacts
+	rm -rf __pycache__ .pytest_cache .ruff_cache artifacts/
+	find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true
