@@ -74,6 +74,11 @@ class BasePage:
         self.log.info(f"WAIT invisible → {locator}")
         return self.wait.until(EC.invisibility_of_element_located(locator))
 
+    def wait_present(self, locator):
+        """Wait for element in DOM (not necessarily visible)."""
+        self.log.info(f"WAIT present → {locator}")
+        return self.wait.until(EC.presence_of_element_located(locator))
+
     # -------------------------
     # Actions
     # -------------------------
@@ -132,3 +137,11 @@ class BasePage:
     def find_all(self, locator):
         self.log.info(f"FIND ALL → {locator}")
         return self.driver.find_elements(*locator)
+
+    # -------------------------
+    # JavaScript
+    # -------------------------
+    def js_execute(self, script: str, *args):
+        """Execute JavaScript in the browser and return the result."""
+        self.log.info(f"JS → {script[:80]}{'…' if len(script) > 80 else ''}")
+        return self.driver.execute_script(script, *args)
