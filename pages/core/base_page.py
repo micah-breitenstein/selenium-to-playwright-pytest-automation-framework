@@ -145,3 +145,20 @@ class BasePage:
         """Execute JavaScript in the browser and return the result."""
         self.log.info(f"JS → {script[:80]}{'…' if len(script) > 80 else ''}")
         return self.driver.execute_script(script, *args)
+
+    # -------------------------
+    # Scrolling
+    # -------------------------
+    def scroll_to(self, locator):
+        """Scroll an element into view using JavaScript."""
+        el = self.wait_present(locator)
+        self.log.info(f"SCROLL_TO → {locator}")
+        self.driver.execute_script(
+            "arguments[0].scrollIntoView({block: 'center'});", el
+        )
+        return el
+
+    def scroll_to_bottom(self) -> None:
+        """Scroll to the bottom of the page."""
+        self.log.info("SCROLL → bottom")
+        self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
