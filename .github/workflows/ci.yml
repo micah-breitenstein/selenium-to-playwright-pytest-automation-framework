@@ -28,4 +28,13 @@ jobs:
           python -m pytest -n auto \
             --browser=chrome \
             --headless \
-            --base-url=https://the-internet.herokuapp.com
+            --site=internet
+
+      - name: Upload failure artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: failure-screenshots
+          path: artifacts/
+          retention-days: 14
+          if-no-files-found: ignore
