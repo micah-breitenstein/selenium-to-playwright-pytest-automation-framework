@@ -403,3 +403,22 @@ def pytest_runtest_setup(item):
     browser = item.config.getoption("--browser", default="safari").lower()
     if browser == "safari" and item.get_closest_marker("no_safari"):
         pytest.skip("Skipped on Safari (SafariDriver limitation).")
+
+
+def pytest_collection_modifyitems(config, items):
+    """
+    Auto-skip tests that live under a site-specific directory when
+    a different --site is selected.  For example, tests under
+    ``tests/internet/`` are skipped when ``--site=saucedemo``.
+    """
+    site = config.getoption("--site")
+    skip_wrong_site = pytest.mark.skip(reason=f"test belongs to a different site (--site={site})")
+
+    for item in items:
+        # Determine which site directory this test lives under.
+        parts = item.nodeid.split("/")
+        # Expected layout: tests/<site_alias>/test_*.py
+        if len(parts) >= 3 and parts[0] == "tests":
+            test_site = parts[1]
+            if test_site in SITES and test_site != site:
+                item.add_marker(skip_wrong_site)
