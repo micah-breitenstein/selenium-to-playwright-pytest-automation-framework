@@ -75,6 +75,7 @@ def __getattr__(name: str) -> Any:
 
 # IDE / type checker support (not executed at runtime)
 if TYPE_CHECKING:
+    from .ab_test_page import ABTestPage
     from .add_remove_elements_page import AddRemoveElementsPage
     from .basic_auth_page import BasicAuthPage
     from .broken_images_page import BrokenImagesPage
@@ -87,19 +88,37 @@ if TYPE_CHECKING:
     from .dropdown_page import DropdownPage
     from .dynamic_content_page import DynamicContentPage
     from .dynamic_loading_page import DynamicLoadingPage
-    from .large_dom_page import LargeDomPage
-    from .landing_page import LandingPage
+    from .entry_ad_page import EntryAdPage
+    from .exit_intent_page import ExitIntentPage
+    from .file_download_page import FileDownloadPage
+    from .file_upload_page import FileUploadPage
+    from .floating_menu_page import FloatingMenuPage
+    from .forgot_password_page import ForgotPasswordPage
+    from .geolocation_page import GeolocationPage
+    from .homepage import HomePage
+    from .horizontal_slider_page import HorizontalSliderPage
+    from .hovers_page import HoversPage
+    from .iframe_page import IFramePage
+    from .infinite_scroll_page import InfiniteScrollPage
+    from .inputs_page import InputsPage
+    from .javascript_alerts_page import JavaScriptAlertsPage
     from .javascript_error_page import JavaScriptErrorPage
+    from .jqueryui_menu_page import JQueryUIMenuPage
+    from .key_presses_page import KeyPressesPage
+    from .landing_page import LandingPage
+    from .large_dom_page import LargeDomPage
     from .login_page import LoginPage
+    from .nested_frames_page import NestedFramesPage
     from .notification_message_page import NotificationMessagePage
     from .redirector_page import RedirectorPage
     from .secure_area_page import SecureAreaPage
     from .secure_file_download_page import SecureFileDownloadPage
+    from .shadow_dom_page import ShadowDomPage
     from .shifting_content_image_page import ShiftingContentImagePage
     from .shifting_content_list_page import ShiftingContentListPage
     from .shifting_content_menu_page import ShiftingContentMenuPage
-    from .shadow_dom_page import ShadowDomPage
     from .slow_resources_page import SlowResourcesPage
     from .sortable_tables_page import SortableTablesPage
     from .status_codes_page import StatusCodesPage
+    from .tinymce_ai_docs_page import TinyMceAiDocsPage
     from .windows_page import WindowsPage
