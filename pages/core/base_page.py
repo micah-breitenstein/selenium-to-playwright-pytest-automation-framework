@@ -55,6 +55,7 @@ class BasePage:
     # -------------------------
     def go(self, path: str) -> None:
         url = urljoin(self.config.base_url + "/", path.lstrip("/"))
+        self.log.info(f"BASE_URL = {self.config.base_url}")
         self.log.info(f"GO → {url}")
         self.driver.get(url)
 
@@ -123,13 +124,7 @@ class BasePage:
 
         self.log.error("WAIT_ANY timed out")
         raise TimeoutError(f"Neither locator became visible within {timeout}s")
-    
-    def go(self, path: str) -> None:
-        url = urljoin(self.config.base_url + "/", path.lstrip("/"))
-        self.log.info(f"BASE_URL = {self.config.base_url}")
-        self.log.info(f"GO → {url}")
-        self.driver.get(url)
-    
+
     def find(self, locator):
         self.log.info(f"FIND → {locator}")
         return self.driver.find_element(*locator)
