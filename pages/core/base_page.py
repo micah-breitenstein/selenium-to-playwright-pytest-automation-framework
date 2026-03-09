@@ -4,9 +4,16 @@ import time
 import logging
 
 from dataclasses import dataclass
+from typing import Any
 from urllib.parse import urljoin
+
+from selenium.webdriver.remote.webdriver import WebDriver
+from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+
+# Type alias for Selenium locator tuples, e.g. (By.ID, "username")
+Locator = tuple[str, str]
 
 
 @dataclass(frozen=True)
@@ -18,19 +25,19 @@ class Config:
 class BasePage:
     def __init__(
         self,
-        driver,
+        driver: WebDriver,
         config: Config | None = None,
         *,
         base_url: str | None = None,
         timeout: int = 10,
-    ):
+    ) -> None:
         """
         Supports:
             BasePage(driver, base_url="http://127.0.0.1:9292")
             BasePage(driver, config=Config(...))
         """
 
-        self.driver = driver
+        self.driver: WebDriver = driver
         self.log = logging.getLogger(self.__class__.__name__)
 
         # Build config safely at runtime (never as default argument)
@@ -75,19 +82,19 @@ class BasePage:
     # -------------------------
     # Wait Helpers
     # -------------------------
-    def wait_visible(self, locator):
+    def wait_visible(self, locator: Locator) -> WebElement:
         self.log.info(f"WAIT visible → {locator}")
         return self.wait.until(EC.visibility_of_element_located(locator))
 
-    def wait_clickable(self, locator):
+    def wait_clickable(self, locator: Locator) -> WebElement:
         self.log.info(f"WAIT clickable → {locator}")
         return self.wait.until(EC.element_to_be_clickable(locator))
 
-    def wait_invisible(self, locator):
+    def wait_invisible(self, locator: Locator) -> bool:
         self.log.info(f"WAIT invisible → {locator}")
         return self.wait.until(EC.invisibility_of_element_located(locator))
 
-    def wait_present(self, locator):
+    def wait_present(self, locator: Locator) -> WebElement:
         """Wait for element in DOM (not necessarily visible)."""
         self.log.info(f"WAIT present → {locator}")
         return self.wait.until(EC.presence_of_element_located(locator))
@@ -95,11 +102,11 @@ class BasePage:
     # -------------------------
     # Actions
     # -------------------------
-    def click(self, locator) -> None:
+    def click(self, locator: Locator) -> None:
         self.log.info(f"CLICK → {locator}")
         self.wait_clickable(locator).click()
 
-    def type(self, locator, text: str, clear: bool = True) -> None:
+    def type(self, locator: Locator, text: str, clear: bool = True) -> None:
         # Redact likely passwords
         redacted = "***" if "password" in str(locator).lower() else text
         self.log.info(f"TYPE → {locator} value={redacted!r} clear={clear}")
@@ -109,11 +116,11 @@ class BasePage:
             el.clear()
         el.send_keys(text)
 
-    def get_text(self, locator) -> str:
+    def get_text(self, locator: Locator) -> str:
         self.log.info(f"GET_TEXT → {locator}")
         return self.wait_visible(locator).text
 
-    def is_visible(self, locator, timeout=1):
+    def is_visible(self, locator: Locator, timeout: int = 1) -> bool:
         try:
             WebDriverWait(self.driver, timeout).until(
                 EC.visibility_of_element_located(locator)
@@ -124,7 +131,7 @@ class BasePage:
             self.log.info(f"NOT VISIBLE ✗ {locator}")
             return False
 
-    def wait_any(self, locator_a, locator_b, timeout=10):
+    def wait_any(self, locator_a: Locator, locator_b: Locator, timeout: int = 10) -> str:
         """
         Wait until either locator_a or locator_b is visible.
         Returns "first" if locator_a wins, "second" if locator_b wins.
@@ -143,18 +150,18 @@ class BasePage:
         self.log.error("WAIT_ANY timed out")
         raise TimeoutError(f"Neither locator became visible within {timeout}s")
 
-    def find(self, locator):
+    def find(self, locator: Locator) -> WebElement:
         self.log.info(f"FIND → {locator}")
         return self.driver.find_element(*locator)
 
-    def find_all(self, locator):
+    def find_all(self, locator: Locator) -> list[WebElement]:
         self.log.info(f"FIND ALL → {locator}")
         return self.driver.find_elements(*locator)
 
     # -------------------------
     # JavaScript
     # -------------------------
-    def js_execute(self, script: str, *args):
+    def js_execute(self, script: str, *args: Any) -> Any:
         """Execute JavaScript in the browser and return the result."""
         self.log.info(f"JS → {script[:80]}{'…' if len(script) > 80 else ''}")
         return self.driver.execute_script(script, *args)
@@ -162,7 +169,7 @@ class BasePage:
     # -------------------------
     # Scrolling
     # -------------------------
-    def scroll_to(self, locator):
+    def scroll_to(self, locator: Locator) -> WebElement:
         """Scroll an element into view using JavaScript."""
         el = self.wait_present(locator)
         self.log.info(f"SCROLL_TO → {locator}")
@@ -179,7 +186,7 @@ class BasePage:
     # -------------------------
     # Debugging
     # -------------------------
-    def highlight(self, locator, color: str = "red", duration: float = 0.5):
+    def highlight(self, locator: Locator, color: str = "red", duration: float = 0.5) -> WebElement:
         """Briefly highlight an element with a colored border for visual debugging."""
         el = self.wait_visible(locator)
         original = el.value_of_css_property("border")
@@ -206,7 +213,7 @@ class BasePage:
             EC.text_to_be_present_in_element(locator, expected)
         )
 
-    def get_attribute(self, locator, attr: str) -> str | None:
+    def get_attribute(self, locator: Locator, attr: str) -> str | None:
         """Return an attribute value from the first matching element."""
         el = self.wait_present(locator)
         value = el.get_attribute(attr)
