@@ -3,64 +3,27 @@ from __future__ import annotations
 from importlib import import_module
 from typing import TYPE_CHECKING, Any
 
-_EXPORTS: dict[str, str] = {
-    "ABTestPage": "ab_test_page",
-    "AddRemoveElementsPage": "add_remove_elements_page",
-    "BasicAuthPage": "basic_auth_page",
-    "BrokenImagesPage": "broken_images_page",
-    "ChallengingDomPage": "challenging_dom_page",
-    "CheckboxesPage": "checkboxes_page",
-    "ContextMenuPage": "context_menu_page",
-    "DigestAuthPage": "digest_auth_page",
-    "DisappearingElementsPage": "disappearing_elements_page",
-    "DragAndDropPage": "drag_and_drop_page",
-    "DropdownPage": "dropdown_page",
-    "DynamicContentPage": "dynamic_content_page",
-    "DynamicLoadingPage": "dynamic_loading_page",
-    "EntryAdPage": "entry_ad_page",
-    "ExitIntentPage": "exit_intent_page",
-    "FileDownloadPage": "file_download_page",
-    "FileUploadPage": "file_upload_page",
-    "FloatingMenuPage": "floating_menu_page",
-    "ForgotPasswordPage": "forgot_password_page",
-    "GeolocationPage": "geolocation_page",
-    "HomePage": "homepage",
-    "HorizontalSliderPage": "horizontal_slider_page",
-    "HoversPage": "hovers_page",
-    "IFramePage": "iframe_page",
-    "InfiniteScrollPage": "infinite_scroll_page",
-    "InputsPage": "inputs_page",
-    "JQueryUIMenuPage": "jqueryui_menu_page",
-    "JavaScriptAlertsPage": "javascript_alerts_page",
-    "JavaScriptErrorPage": "javascript_error_page",
-    "KeyPressesPage": "key_presses_page",
-    "LargeDomPage": "large_dom_page",
-    "LandingPage": "landing_page",
-    "LoginPage": "login_page",
-    "NestedFramesPage": "nested_frames_page",
-    "NotificationMessagePage": "notification_message_page",
-    "RedirectorPage": "redirector_page",
-    "SecureAreaPage": "secure_area_page",
-    "SecureFileDownloadPage": "secure_file_download_page",
-    "ShiftingContentImagePage": "shifting_content_image_page",
-    "ShiftingContentListPage": "shifting_content_list_page",
-    "ShiftingContentMenuPage": "shifting_content_menu_page",
-    "ShadowDomPage": "shadow_dom_page",
-    "SlowResourcesPage": "slow_resources_page",
-    "SortableTablesPage": "sortable_tables_page",
-    "StatusCodesPage": "status_codes_page",
-    "TinyMceAiDocsPage": "tinymce_ai_docs_page",
-    "WindowsPage": "windows_page",
-}
+# ---------------------------------------------------------------------------
+# Backward-compatible re-exports.
+#
+# All existing "internet" page objects are accessible directly from `pages`:
+#     from pages import LoginPage          # still works
+#     from pages.internet import LoginPage  # also works (site-specific)
+#
+# New sites (saucedemo, demoqa) should be imported from their own sub-package:
+#     from pages.saucedemo import SauceDemoLoginPage
+# ---------------------------------------------------------------------------
 
-__all__ = sorted(_EXPORTS.keys())
+# Delegate to pages.internet for the "internet" site page objects
+from pages.internet import _EXPORTS, __all__  # noqa: F401
+
 
 def __getattr__(name: str) -> Any:
     module_name = _EXPORTS.get(name)
     if module_name is None:
         raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
 
-    module = import_module(f"{__name__}.{module_name}")
+    module = import_module(f"{__name__}.internet.{module_name}")
 
     try:
         value = getattr(module, name)
@@ -75,50 +38,50 @@ def __getattr__(name: str) -> Any:
 
 # IDE / type checker support (not executed at runtime)
 if TYPE_CHECKING:
-    from .ab_test_page import ABTestPage
-    from .add_remove_elements_page import AddRemoveElementsPage
-    from .basic_auth_page import BasicAuthPage
-    from .broken_images_page import BrokenImagesPage
-    from .challenging_dom_page import ChallengingDomPage
-    from .checkboxes_page import CheckboxesPage
-    from .context_menu_page import ContextMenuPage
-    from .digest_auth_page import DigestAuthPage
-    from .disappearing_elements_page import DisappearingElementsPage
-    from .drag_and_drop_page import DragAndDropPage
-    from .dropdown_page import DropdownPage
-    from .dynamic_content_page import DynamicContentPage
-    from .dynamic_loading_page import DynamicLoadingPage
-    from .entry_ad_page import EntryAdPage
-    from .exit_intent_page import ExitIntentPage
-    from .file_download_page import FileDownloadPage
-    from .file_upload_page import FileUploadPage
-    from .floating_menu_page import FloatingMenuPage
-    from .forgot_password_page import ForgotPasswordPage
-    from .geolocation_page import GeolocationPage
-    from .homepage import HomePage
-    from .horizontal_slider_page import HorizontalSliderPage
-    from .hovers_page import HoversPage
-    from .iframe_page import IFramePage
-    from .infinite_scroll_page import InfiniteScrollPage
-    from .inputs_page import InputsPage
-    from .javascript_alerts_page import JavaScriptAlertsPage
-    from .javascript_error_page import JavaScriptErrorPage
-    from .jqueryui_menu_page import JQueryUIMenuPage
-    from .key_presses_page import KeyPressesPage
-    from .landing_page import LandingPage
-    from .large_dom_page import LargeDomPage
-    from .login_page import LoginPage
-    from .nested_frames_page import NestedFramesPage
-    from .notification_message_page import NotificationMessagePage
-    from .redirector_page import RedirectorPage
-    from .secure_area_page import SecureAreaPage
-    from .secure_file_download_page import SecureFileDownloadPage
-    from .shadow_dom_page import ShadowDomPage
-    from .shifting_content_image_page import ShiftingContentImagePage
-    from .shifting_content_list_page import ShiftingContentListPage
-    from .shifting_content_menu_page import ShiftingContentMenuPage
-    from .slow_resources_page import SlowResourcesPage
-    from .sortable_tables_page import SortableTablesPage
-    from .status_codes_page import StatusCodesPage
-    from .tinymce_ai_docs_page import TinyMceAiDocsPage
-    from .windows_page import WindowsPage
+    from .internet.ab_test_page import ABTestPage
+    from .internet.add_remove_elements_page import AddRemoveElementsPage
+    from .internet.basic_auth_page import BasicAuthPage
+    from .internet.broken_images_page import BrokenImagesPage
+    from .internet.challenging_dom_page import ChallengingDomPage
+    from .internet.checkboxes_page import CheckboxesPage
+    from .internet.context_menu_page import ContextMenuPage
+    from .internet.digest_auth_page import DigestAuthPage
+    from .internet.disappearing_elements_page import DisappearingElementsPage
+    from .internet.drag_and_drop_page import DragAndDropPage
+    from .internet.dropdown_page import DropdownPage
+    from .internet.dynamic_content_page import DynamicContentPage
+    from .internet.dynamic_loading_page import DynamicLoadingPage
+    from .internet.entry_ad_page import EntryAdPage
+    from .internet.exit_intent_page import ExitIntentPage
+    from .internet.file_download_page import FileDownloadPage
+    from .internet.file_upload_page import FileUploadPage
+    from .internet.floating_menu_page import FloatingMenuPage
+    from .internet.forgot_password_page import ForgotPasswordPage
+    from .internet.geolocation_page import GeolocationPage
+    from .internet.homepage import HomePage
+    from .internet.horizontal_slider_page import HorizontalSliderPage
+    from .internet.hovers_page import HoversPage
+    from .internet.iframe_page import IFramePage
+    from .internet.infinite_scroll_page import InfiniteScrollPage
+    from .internet.inputs_page import InputsPage
+    from .internet.javascript_alerts_page import JavaScriptAlertsPage
+    from .internet.javascript_error_page import JavaScriptErrorPage
+    from .internet.jqueryui_menu_page import JQueryUIMenuPage
+    from .internet.key_presses_page import KeyPressesPage
+    from .internet.landing_page import LandingPage
+    from .internet.large_dom_page import LargeDomPage
+    from .internet.login_page import LoginPage
+    from .internet.nested_frames_page import NestedFramesPage
+    from .internet.notification_message_page import NotificationMessagePage
+    from .internet.redirector_page import RedirectorPage
+    from .internet.secure_area_page import SecureAreaPage
+    from .internet.secure_file_download_page import SecureFileDownloadPage
+    from .internet.shadow_dom_page import ShadowDomPage
+    from .internet.shifting_content_image_page import ShiftingContentImagePage
+    from .internet.shifting_content_list_page import ShiftingContentListPage
+    from .internet.shifting_content_menu_page import ShiftingContentMenuPage
+    from .internet.slow_resources_page import SlowResourcesPage
+    from .internet.sortable_tables_page import SortableTablesPage
+    from .internet.status_codes_page import StatusCodesPage
+    from .internet.tinymce_ai_docs_page import TinyMceAiDocsPage
+    from .internet.windows_page import WindowsPage

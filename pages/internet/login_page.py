@@ -1,6 +1,6 @@
 from selenium.webdriver.common.by import By
 from pages.core.base_page import BasePage
-from pages.secure_area_page import SecureAreaPage
+from .secure_area_page import SecureAreaPage
 
 
 class LoginPage(BasePage):

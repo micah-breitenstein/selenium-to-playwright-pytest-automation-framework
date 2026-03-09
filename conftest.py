@@ -15,6 +15,8 @@ from selenium.common.exceptions import (
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 
+from config.sites import SITES
+
 
 # -------------------------
 # CLI OPTIONS
@@ -32,10 +34,16 @@ def pytest_addoption(parser):
         help="Run browser in headless mode (local Chrome only)",
     )
     parser.addoption(
+        "--site",
+        action="store",
+        default="internet",
+        help=f"Site alias to test against. Registered sites: {', '.join(sorted(SITES))}",
+    )
+    parser.addoption(
         "--base-url",
         action="store",
-        default="https://the-internet.herokuapp.com",
-        help="Base URL for the app under test",
+        default=None,
+        help="Base URL override (takes precedence over --site)",
     )
     parser.addoption(
         "--remote",
@@ -64,10 +72,21 @@ def pytest_addoption(parser):
 
 # -------------------------
 # BASE URL (single source of truth)
+# --base-url wins if provided; otherwise resolved from --site via SITES.
 # -------------------------
 @pytest.fixture(scope="session")
 def base_url(request) -> str:
-    return request.config.getoption("--base-url").rstrip("/")
+    explicit = request.config.getoption("--base-url")
+    if explicit:
+        return explicit.rstrip("/")
+
+    site = request.config.getoption("--site")
+    if site not in SITES:
+        raise pytest.UsageError(
+            f"Unknown site {site!r}. Registered sites: {', '.join(sorted(SITES))}. "
+            f"Add it to config/sites.py or use --base-url to override."
+        )
+    return SITES[site].rstrip("/")
 
 
 # -------------------------
@@ -299,7 +318,7 @@ def page(driver, base_url):
 
 @pytest.fixture
 def landing(driver, base_url):
-    from pages.landing_page import LandingPage
+    from pages.internet.landing_page import LandingPage
     return LandingPage(driver, base_url=base_url)
 
 
@@ -356,7 +375,14 @@ def pytest_runtest_makereport(item, call):
 # MARKERS / SAFARI SKIPS / LOGGING CONFIG
 # -------------------------
 def pytest_configure(config):
-    os.environ["BASE_URL"] = config.getoption("--base-url")
+    # Resolve the base URL for environment variable (used by some helpers).
+    explicit = config.getoption("--base-url")
+    if explicit:
+        os.environ["BASE_URL"] = explicit
+    else:
+        from config.sites import SITES as _sites
+        site = config.getoption("--site")
+        os.environ["BASE_URL"] = _sites.get(site, "")
 
     # Register markers (prevents "unknown marker" warnings)
     config.addinivalue_line(
