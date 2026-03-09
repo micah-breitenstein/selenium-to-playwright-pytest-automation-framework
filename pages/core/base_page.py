@@ -219,3 +219,45 @@ class BasePage:
         value = el.get_attribute(attr)
         self.log.info(f"GET_ATTR → {locator} {attr}={value!r}")
         return value
+
+    # -------------------------
+    # Dropdown / Select
+    # -------------------------
+    def select_by_value(self, locator: Locator, value: str) -> None:
+        """Select an <option> by its ``value`` attribute."""
+        from selenium.webdriver.support.ui import Select
+
+        el = self.wait_visible(locator)
+        Select(el).select_by_value(value)
+        self.log.info(f"SELECT value={value!r} → {locator}")
+
+    def select_by_text(self, locator: Locator, text: str) -> None:
+        """Select an <option> by its visible text."""
+        from selenium.webdriver.support.ui import Select
+
+        el = self.wait_visible(locator)
+        Select(el).select_by_visible_text(text)
+        self.log.info(f"SELECT text={text!r} → {locator}")
+
+    def selected_option_text(self, locator: Locator) -> str:
+        """Return the visible text of the currently selected <option>."""
+        from selenium.webdriver.support.ui import Select
+
+        el = self.wait_visible(locator)
+        text = Select(el).first_selected_option.text
+        self.log.info(f"SELECTED text={text!r} ← {locator}")
+        return text
+
+    # -------------------------
+    # Frames / iframes
+    # -------------------------
+    def switch_to_frame(self, locator: Locator) -> None:
+        """Switch into an iframe identified by *locator*."""
+        el = self.wait_present(locator)
+        self.driver.switch_to.frame(el)
+        self.log.info(f"FRAME → {locator}")
+
+    def switch_to_default(self) -> None:
+        """Switch back to the top-level document."""
+        self.driver.switch_to.default_content()
+        self.log.info("FRAME → default")
