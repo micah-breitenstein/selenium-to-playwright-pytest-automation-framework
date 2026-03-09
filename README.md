@@ -1,211 +1,56 @@
 # Selenium Pytest Page Object Cross Browser SauceLabs
 
-![Python](https://img.shields.io/badge/python-3.10+-blue)
+![Python](https://img.shields.io/badge/python-3.14+-blue)
 ![Selenium](https://img.shields.io/badge/selenium-automation-green)
 ![pytest](https://img.shields.io/badge/pytest-testing-orange)
 
-End-to-end UI automation framework built with **Python, Selenium WebDriver, and pytest**.
-
-The framework demonstrates scalable automation practices including:
-
-- Page Object Model (POM)
-- Cross-browser testing (Safari, Chrome, Firefox, Edge)
-- Local and Sauce Labs cloud execution
-- Pytest fixtures and CLI configuration
-- Screenshot capture on failure
-- Parallel test execution
-- Structured page objects and reusable components
+End-to-end UI test suite for [the-internet.herokuapp.com](https://the-internet.herokuapp.com) built with **Selenium 4**, **pytest**, and the **Page Object Model** pattern. Supports Chrome (local), Safari (local), and remote execution on **Sauce Labs**.
 
 ---
 
-# Application Under Test
+## Prerequisites
 
-Tests target the public Selenium practice site:
+- Python 3.14+
+- Google Chrome (local) and/or Safari (local)
+- [Sauce Labs](https://saucelabs.com) account (for remote execution)
 
-https://the-internet.herokuapp.com
-
-The suite includes coverage for:
-
-- Authentication
-- File uploads and downloads
-- Dynamic elements
-- Floating menus
-- Large DOM tables
-- iFrame interactions
-- jQuery UI components
-
----
-
-# Framework Architecture
-
-The project follows the **Page Object Model (POM)** design pattern to promote maintainability, readability, and reuse.
-
-```
-project-root
-│
-├── pages/
-│   ├── base_page.py
-│   ├── login_page.py
-│   ├── file_upload_page.py
-│   └── ...
-│
-├── tests/
-│   ├── test_login.py
-│   ├── test_file_upload.py
-│   └── ...
-│
-├── artifacts/
-│   └── screenshots and logs
-│
-├── conftest.py
-└── pytest.ini
-```
-
-### Key Components
-
-**Page Objects**
-
-- Encapsulate page locators and UI behavior
-- Provide reusable interactions for tests
-- Reduce duplication in test logic
-
-**Tests**
-
-- Contain assertions and user workflows
-- Use page objects to keep tests readable
-
-**Fixtures**
-
-Defined in `conftest.py` to manage:
-
-- browser initialization
-- CLI configuration
-- remote execution with Sauce Labs
-
----
-
-# Technologies Used
-
-- Python
-- Selenium WebDriver
-- pytest
-- pytest-xdist (parallel testing)
-- webdriver-manager
-- Sauce Labs
-
----
-
-# Installation
-
-Clone the repository and install dependencies.
+## Quick Start
 
 ```bash
 git clone git@github.com:micah-breitenstein/selenium-pytest-pageobject-cross-browser-saucelabs.git
 cd selenium-pytest-pageobject-cross-browser-saucelabs
-
 python3 -m venv .venv
 source .venv/bin/activate
-
-pip install pytest selenium webdriver-manager pytest-xdist
+pip install -r requirements.txt
 ```
 
----
+## Running Tests
 
-# Running Tests
-
-## Run Locally
-
-Default browser (Safari)
+### Local – Safari (default browser)
 
 ```bash
-pytest -q
+python -m pytest --base-url=https://the-internet.herokuapp.com
 ```
 
-Chrome
+### Local – Chrome
 
 ```bash
-pytest -q --browser=chrome
+python -m pytest --browser=chrome --base-url=https://the-internet.herokuapp.com
 ```
 
-Chrome headless
+### Local – Chrome headless + parallel
 
 ```bash
-pytest -q --browser=chrome --headless
+python -m pytest -n auto --browser=chrome --headless --base-url=https://the-internet.herokuapp.com
 ```
 
----
-
-# Run Tests in Parallel
-
-Parallel execution uses **pytest-xdist**.
+### Remote – Sauce Labs (Edge on Windows 11)
 
 ```bash
-pytest -n auto -q --browser=chrome
-```
+export SAUCE_USERNAME=<your-username>
+export SAUCE_ACCESS_KEY=<your-access-key>
 
-This automatically distributes tests across available CPU cores.
-
----
-
-# Test a Local Application (127.0.0.1)
-
-Safari
-
-```bash
-python -m pytest -q -s --base-url=http://127.0.0.1:9292
-```
-
-Chrome
-
-```bash
-python -m pytest -q -s --browser=chrome --base-url=http://127.0.0.1:9292
-```
-
-Chrome headless
-
-```bash
-python -m pytest -q -s --browser=chrome --headless --base-url=http://127.0.0.1:9292
-```
-
----
-
-# Test the Public Demo Site
-
-```bash
-python -m pytest -q -s --base-url=https://the-internet.herokuapp.com
-```
-
-Chrome
-
-```bash
-python -m pytest -q -s --browser=chrome --base-url=https://the-internet.herokuapp.com
-```
-
-Headless
-
-```bash
-python -m pytest -q --browser=chrome --headless --base-url=https://the-internet.herokuapp.com
-```
-
----
-
-# Sauce Labs Setup
-
-Set your Sauce Labs credentials as environment variables.
-
-```bash
-export SAUCE_USERNAME=your_username
-export SAUCE_ACCESS_KEY=your_access_key
-```
-
----
-
-# Running Tests on Sauce Labs
-
-## Edge on Windows 11
-
-```bash
-python -m pytest -q \
+python -m pytest \
   --remote \
   --browser=edge \
   --platform="Windows 11" \
@@ -214,10 +59,10 @@ python -m pytest -q \
   --base-url=https://the-internet.herokuapp.com
 ```
 
-## Chrome on macOS 13
+### Remote – Sauce Labs (Chrome on macOS 13)
 
 ```bash
-python -m pytest -q \
+python -m pytest \
   --remote \
   --browser=chrome \
   --platform="macOS 13" \
@@ -226,27 +71,62 @@ python -m pytest -q \
   --base-url=https://the-internet.herokuapp.com
 ```
 
----
+## CLI Options
 
-# Failure Artifacts
+| Flag | Default | Description |
+|------|---------|-------------|
+| `--browser` | `safari` | Browser to use: `safari`, `chrome`, `edge` |
+| `--headless` | off | Run Chrome in headless mode |
+| `--base-url` | `https://the-internet.herokuapp.com` | Application base URL |
+| `--remote` | off | Run on Sauce Labs instead of locally |
+| `--platform` | `Windows 11` | Sauce Labs OS platform |
+| `--browser-version` | `latest` | Sauce Labs browser version |
+| `--sauce-region` | `us-west-1` | Sauce Labs data center region |
+
+## Project Structure
+
+```
+├── conftest.py              # Fixtures, CLI options, driver management
+├── pytest.ini               # pytest settings and markers
+├── requirements.txt         # Python dependencies
+├── pages/
+│   ├── __init__.py          # Lazy-loading page object registry
+│   ├── core/
+│   │   └── base_page.py     # BasePage – shared wait/click/type helpers
+│   ├── components/
+│   │   └── flash.py         # Reusable flash-message component
+│   ├── landing_page.py      # Hub page for navigation
+│   ├── login_page.py        # Login page object
+│   └── ...                  # One page object per feature
+├── tests/
+│   ├── test_login_flow.py
+│   ├── test_checkboxes.py
+│   └── ...                  # One test module per feature
+├── test_file/               # Static assets for upload tests
+└── .github/
+    └── workflows/
+        └── ci.yml           # GitHub Actions – Chrome headless CI
+```
+
+## Architecture
+
+- **BasePage** ([pages/core/base_page.py](pages/core/base_page.py)) provides `go()`, `click()`, `type()`, `wait_visible()`, `wait_clickable()`, and other helpers that all page objects inherit.
+- **Lazy imports** via `pages/__init__.py` — page classes are only loaded when first accessed.
+- **Driver scoping** — Chrome/remote drivers are module-scoped for speed; Safari is function-scoped for stability.
+- **Retry logic** — Remote session creation retries on Sauce Labs concurrent-session-limit errors.
+
+## Markers
+
+| Marker | Purpose |
+|--------|---------|
+| `@pytest.mark.no_safari` | Skip test when running under Safari (e.g. CDP-only features) |
+
+## Failure Artifacts
 
 When tests fail the framework automatically captures:
 
-- browser screenshots
-- logs
-- test metadata
+- Browser screenshots
+- Logs
+- Test metadata
 
 Artifacts are stored in the `artifacts/` directory.
-
----
-
-# Key Automation Features Demonstrated
-
-This project demonstrates real-world automation engineering techniques:
-
-- Page Object Model test architecture
-- Cross-browser testing
-- Local and cloud execution
-- Parallel testing with pytest-xdist
-- Structured test organization
-- Reusable page abstractions
