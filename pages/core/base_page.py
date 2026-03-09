@@ -175,3 +175,40 @@ class BasePage:
         """Scroll to the bottom of the page."""
         self.log.info("SCROLL → bottom")
         self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+
+    # -------------------------
+    # Debugging
+    # -------------------------
+    def highlight(self, locator, color: str = "red", duration: float = 0.5):
+        """Briefly highlight an element with a colored border for visual debugging."""
+        el = self.wait_visible(locator)
+        original = el.value_of_css_property("border")
+        self.driver.execute_script(
+            "arguments[0].style.border = arguments[1];", el, f"3px solid {color}"
+        )
+        if duration:
+            import time
+            time.sleep(duration)
+            self.driver.execute_script(
+                "arguments[0].style.border = arguments[1];", el, original
+            )
+        self.log.info(f"HIGHLIGHT → {locator} color={color}")
+        return el
+
+    # -------------------------
+    # Text Helpers
+    # -------------------------
+    def wait_for_text(self, locator, expected: str, timeout: int | None = None) -> bool:
+        """Wait until the element's text contains *expected*."""
+        t = timeout or self.config.timeout
+        self.log.info(f"WAIT_TEXT → {locator} contains {expected!r} timeout={t}s")
+        return WebDriverWait(self.driver, t).until(
+            EC.text_to_be_present_in_element(locator, expected)
+        )
+
+    def get_attribute(self, locator, attr: str) -> str | None:
+        """Return an attribute value from the first matching element."""
+        el = self.wait_present(locator)
+        value = el.get_attribute(attr)
+        self.log.info(f"GET_ATTR → {locator} {attr}={value!r}")
+        return value
