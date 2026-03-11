@@ -31,6 +31,7 @@ _EXPORTS: dict[str, str] = {
     "EntryAdPage": "entry_ad_page",
     "PWEntryAdPage": "pw_entry_ad_page",
     "ExitIntentPage": "exit_intent_page",
+    "PWExitIntentPage": "pw_exit_intent_page",
     "FileDownloadPage": "file_download_page",
     "FileUploadPage": "file_upload_page",
     "PWFileUploadPage": "pw_file_upload_page",
@@ -137,6 +138,7 @@ if TYPE_CHECKING:
     from .entry_ad_page import EntryAdPage
     from .pw_entry_ad_page import PWEntryAdPage
     from .exit_intent_page import ExitIntentPage
+    from .pw_exit_intent_page import PWExitIntentPage
     from .file_download_page import FileDownloadPage
     from .file_upload_page import FileUploadPage
     from .pw_file_upload_page import PWFileUploadPage
