@@ -13,6 +13,16 @@ pip install -r requirements.txt
 python -m playwright install
 ```
 
+Alternative shell activation commands:
+
+```bash
+# fish
+source .venv/bin/activate.fish
+
+# csh/tcsh
+source .venv/bin/activate.csh
+```
+
 ## Playwright (side-by-side with Selenium)
 
 This repo now supports a minimal Playwright path in parallel with Selenium.
@@ -39,6 +49,25 @@ Run headed mode:
 ```bash
 python -m pytest tests/playwright -m playwright --pw-headed
 ```
+
+Makefile shortcuts:
+
+```bash
+make pw-test
+make pw-headed
+make pw-parallel
+```
+
+Quick quality gate before opening a PR:
+
+```bash
+make check
+```
+
+Note on external TinyMCE AI docs tests:
+
+- A subset of tests may be skipped when the third-party demo editor is non-interactive at runtime.
+- This is expected behavior to avoid false negatives from external service instability.
 
 ## Adding a New Site
 
