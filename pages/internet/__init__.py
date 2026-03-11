@@ -94,6 +94,7 @@ _EXPORTS: dict[str, str] = {
     "PWStatusCodesPage": "pw_status_codes_page",
     "TinyMceAiDocsPage": "tinymce_ai_docs_page",
     "PWTinyMceAiDocsPage": "pw_tinymce_ai_docs_page",
+    "TyposPage": "typos_page",
     "PWTyposPage": "pw_typos_page",
     "WindowsPage": "windows_page",
     "PWWindowsPage": "pw_windows_page",
@@ -214,4 +215,5 @@ if TYPE_CHECKING:
     from .sortable_tables_page import SortableTablesPage
     from .status_codes_page import StatusCodesPage
     from .tinymce_ai_docs_page import TinyMceAiDocsPage
+    from .typos_page import TyposPage
     from .windows_page import WindowsPage

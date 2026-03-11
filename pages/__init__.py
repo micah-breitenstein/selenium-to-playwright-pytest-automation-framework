@@ -83,4 +83,5 @@ if TYPE_CHECKING:
     from .internet.sortable_tables_page import SortableTablesPage
     from .internet.status_codes_page import StatusCodesPage
     from .internet.tinymce_ai_docs_page import TinyMceAiDocsPage
+    from .internet.typos_page import TyposPage
     from .internet.windows_page import WindowsPage
