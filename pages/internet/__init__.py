@@ -9,6 +9,7 @@ _EXPORTS: dict[str, str] = {
     "AddRemoveElementsPage": "add_remove_elements_page",
     "PWAddRemoveElementsPage": "pw_add_remove_elements_page",
     "BasicAuthPage": "basic_auth_page",
+    "PWBasicAuthPage": "pw_basic_auth_page",
     "BrokenImagesPage": "broken_images_page",
     "PWBrokenImagesPage": "pw_broken_images_page",
     "ChallengingDomPage": "challenging_dom_page",
@@ -18,6 +19,7 @@ _EXPORTS: dict[str, str] = {
     "ContextMenuPage": "context_menu_page",
     "PWContextMenuPage": "pw_context_menu_page",
     "DigestAuthPage": "digest_auth_page",
+    "PWDigestAuthPage": "pw_digest_auth_page",
     "DisappearingElementsPage": "disappearing_elements_page",
     "PWDisappearingElementsPage": "pw_disappearing_elements_page",
     "DragAndDropPage": "drag_and_drop_page",
@@ -33,6 +35,7 @@ _EXPORTS: dict[str, str] = {
     "ExitIntentPage": "exit_intent_page",
     "PWExitIntentPage": "pw_exit_intent_page",
     "FileDownloadPage": "file_download_page",
+    "PWFileDownloadPage": "pw_file_download_page",
     "FileUploadPage": "file_upload_page",
     "PWFileUploadPage": "pw_file_upload_page",
     "FloatingMenuPage": "floating_menu_page",
@@ -53,6 +56,7 @@ _EXPORTS: dict[str, str] = {
     "PWJavaScriptAlertsPage": "pw_javascript_alerts_page",
     "PWInputsPage": "pw_inputs_page",
     "JQueryUIMenuPage": "jqueryui_menu_page",
+    "PWJQueryUIMenuPage": "pw_jqueryui_menu_page",
     "JavaScriptAlertsPage": "javascript_alerts_page",
     "JavaScriptErrorPage": "javascript_error_page",
     "PWJavaScriptErrorPage": "pw_javascript_error_page",
@@ -64,6 +68,7 @@ _EXPORTS: dict[str, str] = {
     "LoginPage": "login_page",
     "PWLoginPage": "pw_login_page",
     "NestedFramesPage": "nested_frames_page",
+    "PWNestedFramesPage": "pw_nested_frames_page",
     "NotificationMessagePage": "notification_message_page",
     "PWNotificationMessagePage": "pw_notification_message_page",
     "RedirectorPage": "redirector_page",
@@ -116,6 +121,7 @@ if TYPE_CHECKING:
     from .add_remove_elements_page import AddRemoveElementsPage
     from .pw_add_remove_elements_page import PWAddRemoveElementsPage
     from .basic_auth_page import BasicAuthPage
+    from .pw_basic_auth_page import PWBasicAuthPage
     from .broken_images_page import BrokenImagesPage
     from .pw_broken_images_page import PWBrokenImagesPage
     from .challenging_dom_page import ChallengingDomPage
@@ -125,6 +131,7 @@ if TYPE_CHECKING:
     from .context_menu_page import ContextMenuPage
     from .pw_context_menu_page import PWContextMenuPage
     from .digest_auth_page import DigestAuthPage
+    from .pw_digest_auth_page import PWDigestAuthPage
     from .disappearing_elements_page import DisappearingElementsPage
     from .pw_disappearing_elements_page import PWDisappearingElementsPage
     from .drag_and_drop_page import DragAndDropPage
@@ -140,6 +147,7 @@ if TYPE_CHECKING:
     from .exit_intent_page import ExitIntentPage
     from .pw_exit_intent_page import PWExitIntentPage
     from .file_download_page import FileDownloadPage
+    from .pw_file_download_page import PWFileDownloadPage
     from .file_upload_page import FileUploadPage
     from .pw_file_upload_page import PWFileUploadPage
     from .floating_menu_page import FloatingMenuPage
@@ -163,6 +171,7 @@ if TYPE_CHECKING:
     from .javascript_error_page import JavaScriptErrorPage
     from .pw_javascript_error_page import PWJavaScriptErrorPage
     from .jqueryui_menu_page import JQueryUIMenuPage
+    from .pw_jqueryui_menu_page import PWJQueryUIMenuPage
     from .key_presses_page import KeyPressesPage
     from .pw_key_presses_page import PWKeyPressesPage
     from .landing_page import LandingPage
@@ -171,6 +180,7 @@ if TYPE_CHECKING:
     from .login_page import LoginPage
     from .pw_login_page import PWLoginPage
     from .nested_frames_page import NestedFramesPage
+    from .pw_nested_frames_page import PWNestedFramesPage
     from .notification_message_page import NotificationMessagePage
     from .pw_notification_message_page import PWNotificationMessagePage
     from .redirector_page import RedirectorPage
