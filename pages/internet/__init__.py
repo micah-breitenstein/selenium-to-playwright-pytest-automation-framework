@@ -63,6 +63,7 @@ _EXPORTS: dict[str, str] = {
     "SecureAreaPage": "secure_area_page",
     "SecureFileDownloadPage": "secure_file_download_page",
     "ShiftingContentImagePage": "shifting_content_image_page",
+    "PWShiftingContentImagePage": "pw_shifting_content_image_page",
     "ShiftingContentListPage": "shifting_content_list_page",
     "PWShiftingContentListPage": "pw_shifting_content_list_page",
     "ShiftingContentMenuPage": "shifting_content_menu_page",
@@ -163,6 +164,7 @@ if TYPE_CHECKING:
     from .shadow_dom_page import ShadowDomPage
     from .pw_shadow_dom_page import PWShadowDomPage
     from .shifting_content_image_page import ShiftingContentImagePage
+    from .pw_shifting_content_image_page import PWShiftingContentImagePage
     from .shifting_content_list_page import ShiftingContentListPage
     from .pw_shifting_content_list_page import PWShiftingContentListPage
     from .shifting_content_menu_page import ShiftingContentMenuPage
