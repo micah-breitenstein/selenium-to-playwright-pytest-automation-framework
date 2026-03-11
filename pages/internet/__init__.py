@@ -43,6 +43,7 @@ _EXPORTS: dict[str, str] = {
     "HoversPage": "hovers_page",
     "PWHoversPage": "pw_hovers_page",
     "IFramePage": "iframe_page",
+    "PWIFramePage": "pw_iframe_page",
     "InfiniteScrollPage": "infinite_scroll_page",
     "PWInfiniteScrollPage": "pw_infinite_scroll_page",
     "InputsPage": "inputs_page",
@@ -146,6 +147,7 @@ if TYPE_CHECKING:
     from .hovers_page import HoversPage
     from .pw_hovers_page import PWHoversPage
     from .iframe_page import IFramePage
+    from .pw_iframe_page import PWIFramePage
     from .infinite_scroll_page import InfiniteScrollPage
     from .pw_infinite_scroll_page import PWInfiniteScrollPage
     from .inputs_page import InputsPage
