@@ -20,8 +20,8 @@ def pytest_addoption(parser):
 
 @pytest.fixture(scope="session")
 def pw_browser(request) -> Browser:
-    engine = request.config.getoption("--pw-browser").lower()
-    headed = request.config.getoption("--pw-headed")
+    engine = str(request.config.getoption("--pw-browser", default="chromium")).lower()
+    headed = bool(request.config.getoption("--pw-headed", default=False))
 
     with sync_playwright() as p:
         browser_type = {

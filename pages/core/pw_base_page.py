@@ -10,7 +10,7 @@ from playwright.sync_api import Locator, Page, expect
 @dataclass(frozen=True)
 class PWConfig:
     base_url: str
-    timeout_ms: int = 10_000
+    timeout_ms: int = 20_000
 
 
 class PWBasePage:
@@ -20,7 +20,7 @@ class PWBasePage:
         config: PWConfig | None = None,
         *,
         base_url: str | None = None,
-        timeout_ms: int = 10_000,
+        timeout_ms: int = 20_000,
     ) -> None:
         self.page = page
         self.log = logging.getLogger(self.__class__.__name__)

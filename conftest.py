@@ -433,7 +433,16 @@ def pytest_collection_modifyitems(config, items):
         reason=f"test belongs to a different site (--site={site})"
     )
 
+    markexpr = (getattr(getattr(config, "option", None), "markexpr", "") or "").lower()
+    running_playwright_only = "playwright" in markexpr
+    skip_playwright = pytest.mark.skip(
+        reason="Playwright tests are skipped in default Selenium runs; use -m playwright to run them."
+    )
+
     for item in items:
+        if item.get_closest_marker("playwright") and not running_playwright_only:
+            item.add_marker(skip_playwright)
+
         # Determine which site directory this test lives under.
         parts = item.nodeid.split("/")
         # Expected layout: tests/<site_alias>/test_*.py
