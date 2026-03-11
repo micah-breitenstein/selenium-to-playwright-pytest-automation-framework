@@ -1,4 +1,4 @@
-.PHONY: install test test-headless test-parallel pw-test pw-headed pw-parallel lint format clean help
+.PHONY: install test test-headless test-parallel pw-test pw-headed pw-parallel check clean help lint format
 
 SITE     ?= internet
 BROWSER  ?= chrome
@@ -38,6 +38,10 @@ lint: ## Run ruff linter
 format: ## Auto-format code with ruff
 	ruff format .
 	ruff check --fix .
+
+check: ## Run lint and format checks without writing changes
+	ruff check .
+	ruff format --check .
 
 clean: ## Remove caches and artifacts
 	rm -rf __pycache__ .pytest_cache .ruff_cache artifacts/
