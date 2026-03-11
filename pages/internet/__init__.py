@@ -27,6 +27,7 @@ _EXPORTS: dict[str, str] = {
     "FileDownloadPage": "file_download_page",
     "FileUploadPage": "file_upload_page",
     "FloatingMenuPage": "floating_menu_page",
+    "PWFloatingMenuPage": "pw_floating_menu_page",
     "ForgotPasswordPage": "forgot_password_page",
     "GeolocationPage": "geolocation_page",
     "HorizontalSliderPage": "horizontal_slider_page",
@@ -110,6 +111,7 @@ if TYPE_CHECKING:
     from .file_download_page import FileDownloadPage
     from .file_upload_page import FileUploadPage
     from .floating_menu_page import FloatingMenuPage
+    from .pw_floating_menu_page import PWFloatingMenuPage
     from .forgot_password_page import ForgotPasswordPage
     from .geolocation_page import GeolocationPage
     from .horizontal_slider_page import HorizontalSliderPage
