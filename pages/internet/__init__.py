@@ -46,6 +46,7 @@ _EXPORTS: dict[str, str] = {
     "InfiniteScrollPage": "infinite_scroll_page",
     "PWInfiniteScrollPage": "pw_infinite_scroll_page",
     "InputsPage": "inputs_page",
+    "PWJavaScriptAlertsPage": "pw_javascript_alerts_page",
     "PWInputsPage": "pw_inputs_page",
     "JQueryUIMenuPage": "jqueryui_menu_page",
     "JavaScriptAlertsPage": "javascript_alerts_page",
@@ -148,6 +149,7 @@ if TYPE_CHECKING:
     from .infinite_scroll_page import InfiniteScrollPage
     from .pw_infinite_scroll_page import PWInfiniteScrollPage
     from .inputs_page import InputsPage
+    from .pw_javascript_alerts_page import PWJavaScriptAlertsPage
     from .pw_inputs_page import PWInputsPage
     from .javascript_alerts_page import JavaScriptAlertsPage
     from .javascript_error_page import JavaScriptErrorPage
