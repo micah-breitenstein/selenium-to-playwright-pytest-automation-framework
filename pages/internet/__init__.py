@@ -85,6 +85,7 @@ _EXPORTS: dict[str, str] = {
     "ShadowDomPage": "shadow_dom_page",
     "PWShadowDomPage": "pw_shadow_dom_page",
     "SlowResourcesPage": "slow_resources_page",
+    "PWSlowResourcesPage": "pw_slow_resources_page",
     "SortableTablesPage": "sortable_tables_page",
     "PWSortableTablesPage": "pw_sortable_tables_page",
     "StatusCodesPage": "status_codes_page",
@@ -198,6 +199,7 @@ if TYPE_CHECKING:
     from .shifting_content_menu_page import ShiftingContentMenuPage
     from .pw_shifting_content_menu_page import PWShiftingContentMenuPage
     from .slow_resources_page import SlowResourcesPage
+    from .pw_slow_resources_page import PWSlowResourcesPage
     from .sortable_tables_page import SortableTablesPage
     from .pw_sortable_tables_page import PWSortableTablesPage
     from .status_codes_page import StatusCodesPage
