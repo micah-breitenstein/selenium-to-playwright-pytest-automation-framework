@@ -51,6 +51,7 @@ _EXPORTS: dict[str, str] = {
     "PWLargeDomPage": "pw_large_dom_page",
     "LandingPage": "landing_page",
     "LoginPage": "login_page",
+    "PWLoginPage": "pw_login_page",
     "NestedFramesPage": "nested_frames_page",
     "NotificationMessagePage": "notification_message_page",
     "PWNotificationMessagePage": "pw_notification_message_page",
@@ -143,6 +144,7 @@ if TYPE_CHECKING:
     from .large_dom_page import LargeDomPage
     from .pw_large_dom_page import PWLargeDomPage
     from .login_page import LoginPage
+    from .pw_login_page import PWLoginPage
     from .nested_frames_page import NestedFramesPage
     from .notification_message_page import NotificationMessagePage
     from .pw_notification_message_page import PWNotificationMessagePage
