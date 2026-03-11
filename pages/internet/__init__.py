@@ -30,6 +30,7 @@ _EXPORTS: dict[str, str] = {
     "FloatingMenuPage": "floating_menu_page",
     "PWFloatingMenuPage": "pw_floating_menu_page",
     "ForgotPasswordPage": "forgot_password_page",
+    "PWForgotPasswordPage": "pw_forgot_password_page",
     "GeolocationPage": "geolocation_page",
     "HorizontalSliderPage": "horizontal_slider_page",
     "PWHorizontalSliderPage": "pw_horizontal_slider_page",
@@ -117,6 +118,7 @@ if TYPE_CHECKING:
     from .floating_menu_page import FloatingMenuPage
     from .pw_floating_menu_page import PWFloatingMenuPage
     from .forgot_password_page import ForgotPasswordPage
+    from .pw_forgot_password_page import PWForgotPasswordPage
     from .geolocation_page import GeolocationPage
     from .horizontal_slider_page import HorizontalSliderPage
     from .pw_horizontal_slider_page import PWHorizontalSliderPage
