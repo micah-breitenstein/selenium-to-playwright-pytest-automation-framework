@@ -12,6 +12,7 @@ _EXPORTS: dict[str, str] = {
     "BrokenImagesPage": "broken_images_page",
     "ChallengingDomPage": "challenging_dom_page",
     "CheckboxesPage": "checkboxes_page",
+    "PWCheckboxesPage": "pw_checkboxes_page",
     "ContextMenuPage": "context_menu_page",
     "DigestAuthPage": "digest_auth_page",
     "DisappearingElementsPage": "disappearing_elements_page",
@@ -85,6 +86,7 @@ if TYPE_CHECKING:
     from .broken_images_page import BrokenImagesPage
     from .challenging_dom_page import ChallengingDomPage
     from .checkboxes_page import CheckboxesPage
+    from .pw_checkboxes_page import PWCheckboxesPage
     from .context_menu_page import ContextMenuPage
     from .digest_auth_page import DigestAuthPage
     from .disappearing_elements_page import DisappearingElementsPage
