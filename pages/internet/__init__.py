@@ -29,6 +29,7 @@ _EXPORTS: dict[str, str] = {
     "ForgotPasswordPage": "forgot_password_page",
     "GeolocationPage": "geolocation_page",
     "HorizontalSliderPage": "horizontal_slider_page",
+    "PWHorizontalSliderPage": "pw_horizontal_slider_page",
     "HoversPage": "hovers_page",
     "PWHoversPage": "pw_hovers_page",
     "IFramePage": "iframe_page",
@@ -108,6 +109,7 @@ if TYPE_CHECKING:
     from .forgot_password_page import ForgotPasswordPage
     from .geolocation_page import GeolocationPage
     from .horizontal_slider_page import HorizontalSliderPage
+    from .pw_horizontal_slider_page import PWHorizontalSliderPage
     from .hovers_page import HoversPage
     from .pw_hovers_page import PWHoversPage
     from .iframe_page import IFramePage
