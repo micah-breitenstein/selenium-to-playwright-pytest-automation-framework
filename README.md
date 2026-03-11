@@ -63,6 +63,14 @@ python -m pytest tests/playwright -m playwright --pw-browser=firefox
 python -m pytest tests/playwright -m playwright --pw-browser=webkit
 ```
 
+Or use Makefile shortcuts:
+
+```bash
+make pw-test
+make pw-headed
+make pw-parallel
+```
+
 ### Specify a site explicitly
 
 ```bash
@@ -174,6 +182,7 @@ To add a new site, add an entry to `config/sites.py` and create matching `pages/
 | Marker | Purpose |
 |--------|---------|
 | `@pytest.mark.no_safari` | Skip test when running under Safari (e.g. CDP-only features) |
+| `@pytest.mark.playwright` | Mark tests that run with Playwright side-by-side with Selenium |
 
 ## Failure Artifacts
 
