@@ -14,6 +14,7 @@ _EXPORTS: dict[str, str] = {
     "CheckboxesPage": "checkboxes_page",
     "PWCheckboxesPage": "pw_checkboxes_page",
     "ContextMenuPage": "context_menu_page",
+    "PWContextMenuPage": "pw_context_menu_page",
     "DigestAuthPage": "digest_auth_page",
     "DisappearingElementsPage": "disappearing_elements_page",
     "PWDisappearingElementsPage": "pw_disappearing_elements_page",
@@ -100,6 +101,7 @@ if TYPE_CHECKING:
     from .checkboxes_page import CheckboxesPage
     from .pw_checkboxes_page import PWCheckboxesPage
     from .context_menu_page import ContextMenuPage
+    from .pw_context_menu_page import PWContextMenuPage
     from .digest_auth_page import DigestAuthPage
     from .disappearing_elements_page import DisappearingElementsPage
     from .pw_disappearing_elements_page import PWDisappearingElementsPage
