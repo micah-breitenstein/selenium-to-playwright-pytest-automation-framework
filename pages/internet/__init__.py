@@ -33,6 +33,7 @@ _EXPORTS: dict[str, str] = {
     "IFramePage": "iframe_page",
     "InfiniteScrollPage": "infinite_scroll_page",
     "InputsPage": "inputs_page",
+    "PWInputsPage": "pw_inputs_page",
     "JQueryUIMenuPage": "jqueryui_menu_page",
     "JavaScriptAlertsPage": "javascript_alerts_page",
     "JavaScriptErrorPage": "javascript_error_page",
@@ -108,6 +109,7 @@ if TYPE_CHECKING:
     from .iframe_page import IFramePage
     from .infinite_scroll_page import InfiniteScrollPage
     from .inputs_page import InputsPage
+    from .pw_inputs_page import PWInputsPage
     from .javascript_alerts_page import JavaScriptAlertsPage
     from .javascript_error_page import JavaScriptErrorPage
     from .jqueryui_menu_page import JQueryUIMenuPage
