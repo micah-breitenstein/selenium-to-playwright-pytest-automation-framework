@@ -70,6 +70,7 @@ _EXPORTS: dict[str, str] = {
     "PWStatusCodesPage": "pw_status_codes_page",
     "TinyMceAiDocsPage": "tinymce_ai_docs_page",
     "WindowsPage": "windows_page",
+    "PWWindowsPage": "pw_windows_page",
 }
 
 __all__ = sorted(_EXPORTS.keys())
@@ -161,3 +162,4 @@ if TYPE_CHECKING:
     from .pw_status_codes_page import PWStatusCodesPage
     from .tinymce_ai_docs_page import TinyMceAiDocsPage
     from .windows_page import WindowsPage
+    from .pw_windows_page import PWWindowsPage
