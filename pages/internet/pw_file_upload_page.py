@@ -20,7 +20,11 @@ class PWFileUploadPage(PWBasePage):
         self.expect_visible(self.FILE_INPUT)
         return self
 
-    def upload_file_with_unique_name(self, original_file: Path | str) -> str:
+    def upload_file_with_unique_name(
+        self,
+        original_file: Path | str,
+        upload_timeout_ms: int = 60_000,
+    ) -> str:
         original = Path(original_file).resolve()
         if not original.exists():
             raise FileNotFoundError(f"Upload file not found: {original}")
@@ -36,15 +40,14 @@ class PWFileUploadPage(PWBasePage):
                 timeout=self.config.timeout_ms,
                 no_wait_after=True,
             )
-            self.page.wait_for_function(
-                "(selector) => (document.querySelector(selector)?.textContent || '').includes('File Uploaded')",
-                arg=self.RESULT_HEADER,
-                timeout=self.config.timeout_ms,
+            self.page.wait_for_url("**/upload", timeout=upload_timeout_ms)
+            self.page.locator(self.RESULT_HEADER).wait_for(
+                state="visible", timeout=upload_timeout_ms
             )
             self.page.wait_for_function(
                 "([selector, expected]) => (document.querySelector(selector)?.textContent || '').trim() === expected",
                 arg=[self.UPLOADED_FILENAME, unique_name],
-                timeout=self.config.timeout_ms,
+                timeout=upload_timeout_ms,
             )
 
         return unique_name
