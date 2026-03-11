@@ -16,6 +16,7 @@ _EXPORTS: dict[str, str] = {
     "ContextMenuPage": "context_menu_page",
     "DigestAuthPage": "digest_auth_page",
     "DisappearingElementsPage": "disappearing_elements_page",
+    "PWDisappearingElementsPage": "pw_disappearing_elements_page",
     "DragAndDropPage": "drag_and_drop_page",
     "DropdownPage": "dropdown_page",
     "PWDropdownPage": "pw_dropdown_page",
@@ -96,6 +97,7 @@ if TYPE_CHECKING:
     from .context_menu_page import ContextMenuPage
     from .digest_auth_page import DigestAuthPage
     from .disappearing_elements_page import DisappearingElementsPage
+    from .pw_disappearing_elements_page import PWDisappearingElementsPage
     from .drag_and_drop_page import DragAndDropPage
     from .dropdown_page import DropdownPage
     from .pw_dropdown_page import PWDropdownPage
