@@ -51,7 +51,9 @@ class PWFileDownloadPage(PWBasePage):
                 raise RuntimeError("HEAD not supported")
             return response.status_code
         except Exception:
-            response = requests.get(url, stream=True, allow_redirects=True, timeout=timeout)
+            response = requests.get(
+                url, stream=True, allow_redirects=True, timeout=timeout
+            )
             try:
                 return response.status_code
             finally:

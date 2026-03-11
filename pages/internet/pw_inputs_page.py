@@ -13,7 +13,9 @@ class PWInputsPage(PWBasePage):
         return self
 
     def value(self) -> str:
-        return self.locator(self.NUMBER_INPUT).input_value(timeout=self.config.timeout_ms)
+        return self.locator(self.NUMBER_INPUT).input_value(
+            timeout=self.config.timeout_ms
+        )
 
     def set_number(self, n: int) -> "PWInputsPage":
         self.fill(self.NUMBER_INPUT, str(n))

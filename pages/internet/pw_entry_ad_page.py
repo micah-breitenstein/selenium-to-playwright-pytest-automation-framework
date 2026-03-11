@@ -15,7 +15,9 @@ class PWEntryAdPage(PWBasePage):
 
     def modal_is_visible(self, timeout_ms: int = 2000) -> bool:
         try:
-            self.locator(self.MODAL_CONTENT).wait_for(state="visible", timeout=timeout_ms)
+            self.locator(self.MODAL_CONTENT).wait_for(
+                state="visible", timeout=timeout_ms
+            )
             return True
         except Exception:
             return False

@@ -15,7 +15,11 @@ class PWDisappearingElementsPage(PWBasePage):
         return self
 
     def menu_texts(self) -> list[str]:
-        return [text.strip() for text in self.locator(self.MENU_LINKS).all_inner_texts() if text.strip()]
+        return [
+            text.strip()
+            for text in self.locator(self.MENU_LINKS).all_inner_texts()
+            if text.strip()
+        ]
 
     def has_menu_item(self, label: str) -> bool:
         return label in self.menu_texts()

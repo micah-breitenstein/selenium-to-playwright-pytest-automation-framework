@@ -20,6 +20,8 @@ class PWContextMenuPage(PWBasePage):
             dialog.accept()
 
         self.page.once("dialog", _handle_dialog)
-        self.locator(self.HOT_SPOT).click(button="right", timeout=self.config.timeout_ms)
+        self.locator(self.HOT_SPOT).click(
+            button="right", timeout=self.config.timeout_ms
+        )
         self.page.wait_for_timeout(100)
         return dialog_message[0] if dialog_message else ""

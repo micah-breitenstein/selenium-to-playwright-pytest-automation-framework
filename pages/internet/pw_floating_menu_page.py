@@ -21,7 +21,9 @@ class PWFloatingMenuPage(PWBasePage):
         count = links.count()
         for index in range(count):
             link = links.nth(index)
-            if (link.text_content(timeout=self.config.timeout_ms) or "").strip().lower() == text.strip().lower():
+            if (
+                link.text_content(timeout=self.config.timeout_ms) or ""
+            ).strip().lower() == text.strip().lower():
                 link.click(timeout=self.config.timeout_ms)
                 return
         raise AssertionError(f"Menu item not found: {text!r}")

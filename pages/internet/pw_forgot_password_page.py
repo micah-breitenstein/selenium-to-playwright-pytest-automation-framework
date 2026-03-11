@@ -19,7 +19,9 @@ class PWForgotPasswordPage(PWBasePage):
 
     def submit(self) -> "PWForgotPasswordResultPage":
         self.click(self.RETRIEVE_BUTTON)
-        self.page.wait_for_load_state("domcontentloaded", timeout=self.config.timeout_ms)
+        self.page.wait_for_load_state(
+            "domcontentloaded", timeout=self.config.timeout_ms
+        )
         return PWForgotPasswordResultPage(self.page)
 
     def retrieve_password(self, email: str) -> "PWForgotPasswordResultPage":

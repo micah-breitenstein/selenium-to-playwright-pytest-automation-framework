@@ -19,7 +19,9 @@ class PWTinyMceAiDocsPage(PWBasePage):
         container = self.page.locator(self.LIVE_DEMO_CONTAINER)
         container.wait_for(state="visible", timeout=timeout_ms)
         container.scroll_into_view_if_needed(timeout=timeout_ms)
-        self.page.locator(self.OUTER_IFRAME).first.wait_for(state="attached", timeout=timeout_ms)
+        self.page.locator(self.OUTER_IFRAME).first.wait_for(
+            state="attached", timeout=timeout_ms
+        )
         self._maybe_click_start_overlay(timeout_ms=3_000)
         return self
 
@@ -65,7 +67,9 @@ class PWTinyMceAiDocsPage(PWBasePage):
         )
         return self
 
-    def set_plain_text(self, text: str, timeout_ms: int = 20_000) -> "PWTinyMceAiDocsPage":
+    def set_plain_text(
+        self, text: str, timeout_ms: int = 20_000
+    ) -> "PWTinyMceAiDocsPage":
         if not self.is_editor_interactive(timeout_ms=timeout_ms):
             raise RuntimeError("TinyMCE editor is not interactive")
         body = self._editor_body()
@@ -81,15 +85,15 @@ class PWTinyMceAiDocsPage(PWBasePage):
         return self
 
     def click_bold(self, timeout_ms: int = 20_000) -> "PWTinyMceAiDocsPage":
-        self.page.frame_locator(self.OUTER_IFRAME).locator(self.TOOLBAR_BOLD).first.click(
-            timeout=timeout_ms
-        )
+        self.page.frame_locator(self.OUTER_IFRAME).locator(
+            self.TOOLBAR_BOLD
+        ).first.click(timeout=timeout_ms)
         return self
 
     def click_italic(self, timeout_ms: int = 20_000) -> "PWTinyMceAiDocsPage":
-        self.page.frame_locator(self.OUTER_IFRAME).locator(self.TOOLBAR_ITALIC).first.click(
-            timeout=timeout_ms
-        )
+        self.page.frame_locator(self.OUTER_IFRAME).locator(
+            self.TOOLBAR_ITALIC
+        ).first.click(timeout=timeout_ms)
         return self
 
     def editor_html(self, timeout_ms: int = 20_000) -> str:
@@ -113,7 +117,9 @@ class PWTinyMceAiDocsPage(PWBasePage):
             .click_bold(timeout_ms=timeout_ms)
         )
 
-    def format_italic(self, text: str, timeout_ms: int = 20_000) -> "PWTinyMceAiDocsPage":
+    def format_italic(
+        self, text: str, timeout_ms: int = 20_000
+    ) -> "PWTinyMceAiDocsPage":
         return (
             self.set_plain_text(text, timeout_ms=timeout_ms)
             .select_all_in_editor(timeout_ms=timeout_ms)

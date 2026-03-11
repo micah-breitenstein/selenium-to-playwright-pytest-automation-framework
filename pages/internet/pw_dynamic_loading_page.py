@@ -20,7 +20,9 @@ class PWDynamicLoadingPage(PWBasePage):
 
     def start_loading(self) -> "PWDynamicLoadingPage":
         self.click(self.START_BTN)
-        self.locator(self.LOADING).wait_for(state="hidden", timeout=self.config.timeout_ms)
+        self.locator(self.LOADING).wait_for(
+            state="hidden", timeout=self.config.timeout_ms
+        )
         self.expect_visible(self.FINISH)
         return self
 

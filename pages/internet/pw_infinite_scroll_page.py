@@ -22,7 +22,9 @@ class PWInfiniteScrollPage(PWBasePage):
     def _scroll_to_bottom(self) -> None:
         self.page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
 
-    def load_blocks(self, target_blocks: int = 3, max_scrolls: int = 40) -> "PWInfiniteScrollPage":
+    def load_blocks(
+        self, target_blocks: int = 3, max_scrolls: int = 40
+    ) -> "PWInfiniteScrollPage":
         for _ in range(max_scrolls):
             current_blocks = self.block_count()
             if current_blocks >= target_blocks:

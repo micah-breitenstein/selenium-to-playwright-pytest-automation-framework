@@ -20,7 +20,9 @@ class PWShiftingContentListPage(PWBasePage):
 
     def list_items(self) -> list[str]:
         raw_text = (
-            self.locator(self.LIST_CONTAINER).first.inner_text(timeout=self.config.timeout_ms)
+            self.locator(self.LIST_CONTAINER).first.inner_text(
+                timeout=self.config.timeout_ms
+            )
             or ""
         ).strip()
         return [line.strip() for line in raw_text.splitlines() if line.strip()]

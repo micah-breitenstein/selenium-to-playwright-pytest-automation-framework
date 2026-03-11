@@ -42,10 +42,14 @@ class PWExitIntentPage(PWBasePage):
             return False
 
     def modal_title(self) -> str:
-        text = self.locator(self.MODAL_TITLE).text_content(timeout=self.config.timeout_ms)
+        text = self.locator(self.MODAL_TITLE).text_content(
+            timeout=self.config.timeout_ms
+        )
         return (text or "").strip()
 
     def close_modal(self) -> "PWExitIntentPage":
         self.locator(self.MODAL_CLOSE).click(timeout=self.config.timeout_ms)
-        self.locator(self.MODAL).wait_for(state="hidden", timeout=self.config.timeout_ms)
+        self.locator(self.MODAL).wait_for(
+            state="hidden", timeout=self.config.timeout_ms
+        )
         return self

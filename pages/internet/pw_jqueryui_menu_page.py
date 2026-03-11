@@ -28,7 +28,9 @@ class PWJQueryUIMenuPage(PWBasePage):
 
     def _download_href(self, selector: str) -> str:
         self.open_downloads_menu()
-        href = self.locator(selector).get_attribute("href", timeout=self.config.timeout_ms)
+        href = self.locator(selector).get_attribute(
+            "href", timeout=self.config.timeout_ms
+        )
         if not href:
             raise AssertionError(f"No href found for selector: {selector}")
         return href

@@ -18,4 +18,9 @@ class PWShiftingContentImagePage(PWBasePage):
         return self.get_text(self.HEADING)
 
     def image_src(self) -> str:
-        return self.locator(self.IMAGE).first.get_attribute("src", timeout=self.config.timeout_ms) or ""
+        return (
+            self.locator(self.IMAGE).first.get_attribute(
+                "src", timeout=self.config.timeout_ms
+            )
+            or ""
+        )

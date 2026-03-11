@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from importlib import import_module
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 _EXPORTS: dict[str, str] = {
     "HomePage": "homepage",
@@ -27,9 +27,3 @@ def __getattr__(name: str) -> Any:
 
     globals()[name] = value  # cache it
     return value
-
-
-# IDE / type checker support (not executed at runtime)
-if TYPE_CHECKING:
-    from .homepage import HomePage
-    from .pw_homepage import PWHomePage

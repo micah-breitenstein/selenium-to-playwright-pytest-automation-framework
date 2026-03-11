@@ -18,7 +18,18 @@ class PWChallengingDomPage(PWBasePage):
 
     def button_texts(self) -> dict[str, str]:
         return {
-            "blue": (self.locator(self.BLUE_BTN).text_content(timeout=self.config.timeout_ms) or "").strip(),
-            "red": (self.locator(self.RED_BTN).text_content(timeout=self.config.timeout_ms) or "").strip(),
-            "green": (self.locator(self.GREEN_BTN).text_content(timeout=self.config.timeout_ms) or "").strip(),
+            "blue": (
+                self.locator(self.BLUE_BTN).text_content(timeout=self.config.timeout_ms)
+                or ""
+            ).strip(),
+            "red": (
+                self.locator(self.RED_BTN).text_content(timeout=self.config.timeout_ms)
+                or ""
+            ).strip(),
+            "green": (
+                self.locator(self.GREEN_BTN).text_content(
+                    timeout=self.config.timeout_ms
+                )
+                or ""
+            ).strip(),
         }

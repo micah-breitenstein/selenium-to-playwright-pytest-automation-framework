@@ -20,7 +20,9 @@ class PWStatusCodesPage(PWBasePage):
 
     def click_code(self, code: int) -> "PWStatusCodesPage":
         self.click(f"text={code}")
-        self.page.wait_for_url(f"**/status_codes/{code}", timeout=self.config.timeout_ms)
+        self.page.wait_for_url(
+            f"**/status_codes/{code}", timeout=self.config.timeout_ms
+        )
         self.expect_visible(self.RESULT_TEXT)
         return self
 

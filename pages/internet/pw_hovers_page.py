@@ -26,13 +26,17 @@ class PWHoversPage(PWBasePage):
         return self
 
     def user_name_text(self, user_index_1_based: int) -> str:
-        text = self._figure(user_index_1_based).locator(".figcaption h5").text_content(
-            timeout=self.config.timeout_ms
+        text = (
+            self._figure(user_index_1_based)
+            .locator(".figcaption h5")
+            .text_content(timeout=self.config.timeout_ms)
         )
         return (text or "").strip()
 
     def user_profile_href(self, user_index_1_based: int) -> str:
-        href = self._figure(user_index_1_based).locator(".figcaption a").get_attribute(
-            "href", timeout=self.config.timeout_ms
+        href = (
+            self._figure(user_index_1_based)
+            .locator(".figcaption a")
+            .get_attribute("href", timeout=self.config.timeout_ms)
         )
         return href or ""

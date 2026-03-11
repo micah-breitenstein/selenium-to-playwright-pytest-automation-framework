@@ -8,7 +8,9 @@ class PWNestedFramesPage(PWBasePage):
 
     def open(self) -> "PWNestedFramesPage":
         self.go(self.URL_PATH)
-        self.page.wait_for_selector("frame[name='frame-top']", timeout=self.config.timeout_ms)
+        self.page.wait_for_selector(
+            "frame[name='frame-top']", timeout=self.config.timeout_ms
+        )
         self.page.wait_for_selector(
             "frame[name='frame-bottom']", timeout=self.config.timeout_ms
         )

@@ -18,7 +18,9 @@ class PWKeyPressesPage(PWBasePage):
         target = self.locator(self.INPUT)
         target.click(timeout=self.config.timeout_ms)
         target.press(key, timeout=self.config.timeout_ms)
-        self.locator(self.RESULT).wait_for(state="visible", timeout=self.config.timeout_ms)
+        self.locator(self.RESULT).wait_for(
+            state="visible", timeout=self.config.timeout_ms
+        )
         self.locator(self.RESULT).filter(has_text=expected_text).wait_for(
             state="visible", timeout=self.config.timeout_ms
         )

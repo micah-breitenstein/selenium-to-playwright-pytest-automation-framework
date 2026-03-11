@@ -28,7 +28,9 @@ class PWJavaScriptAlertsPage(PWBasePage):
         self.click(self.JS_PROMPT_BUTTON)
         return self
 
-    def accept_next_dialog(self, prompt_text: str | None = None) -> "PWJavaScriptAlertsPage":
+    def accept_next_dialog(
+        self, prompt_text: str | None = None
+    ) -> "PWJavaScriptAlertsPage":
         self.page.once("dialog", lambda d: d.accept(prompt_text))
         return self
 

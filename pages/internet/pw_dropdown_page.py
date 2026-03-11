@@ -18,7 +18,11 @@ class PWDropdownPage(PWBasePage):
         return (text or "").strip()
 
     def select_by_visible_text(self, text: str) -> None:
-        self.locator(self.DROPDOWN).select_option(label=text, timeout=self.config.timeout_ms)
+        self.locator(self.DROPDOWN).select_option(
+            label=text, timeout=self.config.timeout_ms
+        )
 
     def select_by_value(self, value: str) -> None:
-        self.locator(self.DROPDOWN).select_option(value=value, timeout=self.config.timeout_ms)
+        self.locator(self.DROPDOWN).select_option(
+            value=value, timeout=self.config.timeout_ms
+        )

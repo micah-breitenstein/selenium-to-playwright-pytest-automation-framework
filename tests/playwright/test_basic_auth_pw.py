@@ -9,7 +9,9 @@ from pages.internet import PWBasicAuthPage
 
 @pytest.mark.playwright
 def test_basic_auth_success_playwright(pw_page_object_factory):
-    page = pw_page_object_factory(PWBasicAuthPage).open_with_credentials("admin", "admin")
+    page = pw_page_object_factory(PWBasicAuthPage).open_with_credentials(
+        "admin", "admin"
+    )
     assert "Congratulations" in page.get_message()
 
 

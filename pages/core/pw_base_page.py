@@ -41,7 +41,9 @@ class PWBasePage:
         url = urljoin(self.config.base_url + "/", path.lstrip("/"))
         self.log.info(f"BASE_URL = {self.config.base_url}")
         self.log.info(f"GO → {url}")
-        self.page.goto(url, wait_until="domcontentloaded", timeout=self.config.timeout_ms)
+        self.page.goto(
+            url, wait_until="domcontentloaded", timeout=self.config.timeout_ms
+        )
 
     @property
     def current_url(self) -> str:
@@ -70,4 +72,6 @@ class PWBasePage:
 
     def expect_visible(self, selector: str) -> None:
         self.log.info(f"EXPECT visible → {selector}")
-        expect(self.page.locator(selector)).to_be_visible(timeout=self.config.timeout_ms)
+        expect(self.page.locator(selector)).to_be_visible(
+            timeout=self.config.timeout_ms
+        )

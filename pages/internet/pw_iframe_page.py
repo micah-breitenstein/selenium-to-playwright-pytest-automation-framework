@@ -17,7 +17,9 @@ class PWIFramePage(PWBasePage):
         return self.page.frame_locator(self.EDITOR_IFRAME).locator(self.EDITOR_BODY)
 
     def is_read_only(self) -> bool:
-        value = self._editor_body().get_attribute("contenteditable", timeout=self.config.timeout_ms)
+        value = self._editor_body().get_attribute(
+            "contenteditable", timeout=self.config.timeout_ms
+        )
         return value in (None, "false")
 
     def get_editor_text(self, wait_for_content: bool = False) -> str:

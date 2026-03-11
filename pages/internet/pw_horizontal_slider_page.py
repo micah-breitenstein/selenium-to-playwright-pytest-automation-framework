@@ -18,7 +18,6 @@ class PWHorizontalSliderPage(PWBasePage):
         return (text or "").strip()
 
     def set_to(self, target: float) -> "PWHorizontalSliderPage":
-        slider = self.locator(self.SLIDER)
         self.page.evaluate(
             """
             ([selector, value]) => {
