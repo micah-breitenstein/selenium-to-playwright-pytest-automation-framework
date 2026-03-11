@@ -22,5 +22,13 @@ class PWLoginPage(PWBasePage):
         self.expect_visible(self.FLASH)
         return self
 
+    def login(self, username: str, password: str):
+        from pages.internet import PWSecureAreaPage
+
+        self.fill(self.USERNAME, username)
+        self.fill(self.PASSWORD, password)
+        self.click(self.LOGIN_BUTTON)
+        return PWSecureAreaPage(self.page, config=self.config).wait_loaded()
+
     def flash_message(self) -> str:
         return self.get_text(self.FLASH)
