@@ -9,6 +9,7 @@ class PWLandingPage(PWBasePage):
     FORM_AUTH = "a:text-is('Form Authentication')"
     CHECKBOXES = "a:text-is('Checkboxes')"
     DROPDOWN = "a:text-is('Dropdown')"
+    DYNAMIC_CONTROLS = "a:text-is('Dynamic Controls')"
     DYNAMIC_LOADING = "a:text-is('Dynamic Loading')"
 
     def load(self) -> "PWLandingPage":
@@ -23,6 +24,9 @@ class PWLandingPage(PWBasePage):
 
     def go_to_dropdown(self) -> None:
         self.click(self.DROPDOWN)
+
+    def go_to_dynamic_controls(self) -> None:
+        self.click(self.DYNAMIC_CONTROLS)
 
     def go_to_dynamic_loading(self) -> None:
         self.click(self.DYNAMIC_LOADING)
