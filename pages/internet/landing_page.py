@@ -6,6 +6,7 @@ from pages.core.base_page import BasePage
 
 from .checkboxes_page import CheckboxesPage
 from .dropdown_page import DropdownPage
+from .dynamic_controls_page import DynamicControlsPage
 from .dynamic_loading_page import DynamicLoadingPage
 from .login_page import LoginPage
 
@@ -15,6 +16,7 @@ class LandingPage(BasePage):
     FORM_AUTH = (By.LINK_TEXT, "Form Authentication")
     CHECKBOXES = (By.LINK_TEXT, "Checkboxes")
     DROPDOWN = (By.LINK_TEXT, "Dropdown")
+    DYNAMIC_CONTROLS = (By.LINK_TEXT, "Dynamic Controls")
     DYNAMIC_LOADING = (By.LINK_TEXT, "Dynamic Loading")
 
     def load(self) -> "LandingPage":
@@ -32,6 +34,10 @@ class LandingPage(BasePage):
     def go_to_dropdown(self) -> DropdownPage:
         self.click(self.DROPDOWN)
         return DropdownPage(self.driver, config=self.config)
+
+    def go_to_dynamic_controls(self) -> DynamicControlsPage:
+        self.click(self.DYNAMIC_CONTROLS)
+        return DynamicControlsPage(self.driver, config=self.config)
 
     def go_to_dynamic_loading(self) -> DynamicLoadingPage:
         self.click(self.DYNAMIC_LOADING)
