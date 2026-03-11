@@ -42,6 +42,7 @@ _EXPORTS: dict[str, str] = {
     "PWHoversPage": "pw_hovers_page",
     "IFramePage": "iframe_page",
     "InfiniteScrollPage": "infinite_scroll_page",
+    "PWInfiniteScrollPage": "pw_infinite_scroll_page",
     "InputsPage": "inputs_page",
     "PWInputsPage": "pw_inputs_page",
     "JQueryUIMenuPage": "jqueryui_menu_page",
@@ -141,6 +142,7 @@ if TYPE_CHECKING:
     from .pw_hovers_page import PWHoversPage
     from .iframe_page import IFramePage
     from .infinite_scroll_page import InfiniteScrollPage
+    from .pw_infinite_scroll_page import PWInfiniteScrollPage
     from .inputs_page import InputsPage
     from .pw_inputs_page import PWInputsPage
     from .javascript_alerts_page import JavaScriptAlertsPage
