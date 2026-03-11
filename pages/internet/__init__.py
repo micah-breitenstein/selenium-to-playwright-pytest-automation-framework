@@ -7,6 +7,7 @@ _EXPORTS: dict[str, str] = {
     "ABTestPage": "ab_test_page",
     "PWABTestPage": "pw_ab_test_page",
     "AddRemoveElementsPage": "add_remove_elements_page",
+    "PWAddRemoveElementsPage": "pw_add_remove_elements_page",
     "BasicAuthPage": "basic_auth_page",
     "BrokenImagesPage": "broken_images_page",
     "ChallengingDomPage": "challenging_dom_page",
@@ -79,6 +80,7 @@ if TYPE_CHECKING:
     from .ab_test_page import ABTestPage
     from .pw_ab_test_page import PWABTestPage
     from .add_remove_elements_page import AddRemoveElementsPage
+    from .pw_add_remove_elements_page import PWAddRemoveElementsPage
     from .basic_auth_page import BasicAuthPage
     from .broken_images_page import BrokenImagesPage
     from .challenging_dom_page import ChallengingDomPage
