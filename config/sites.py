@@ -10,4 +10,5 @@ SITES: dict[str, str] = {
     "internet": "https://the-internet.herokuapp.com",
     "saucedemo": "https://www.saucedemo.com",
     "demoqa": "https://demoqa.com",
+    "example": "https://example.com",
 }

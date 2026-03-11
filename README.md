@@ -22,6 +22,7 @@ cd selenium-pytest-pageobject-cross-browser-saucelabs
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
+python -m playwright install
 ```
 
 ## Running Tests
@@ -44,6 +45,22 @@ python -m pytest --browser=chrome
 
 ```bash
 python -m pytest -n auto --browser=chrome --headless
+```
+
+### Playwright (side-by-side)
+
+Run the minimal Playwright smoke tests without changing Selenium tests:
+
+```bash
+python -m pytest tests/playwright -m playwright
+```
+
+Pick a Playwright browser engine:
+
+```bash
+python -m pytest tests/playwright -m playwright --pw-browser=chromium
+python -m pytest tests/playwright -m playwright --pw-browser=firefox
+python -m pytest tests/playwright -m playwright --pw-browser=webkit
 ```
 
 ### Specify a site explicitly

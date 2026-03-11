@@ -10,6 +10,34 @@ cd selenium-pytest-pageobject-cross-browser-saucelabs
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
+python -m playwright install
+```
+
+## Playwright (side-by-side with Selenium)
+
+This repo now supports a minimal Playwright path in parallel with Selenium.
+
+- Playwright base page: `pages/core/pw_base_page.py`
+- Example Playwright page object: `pages/example/pw_homepage.py`
+- Playwright fixtures/tests: `tests/playwright/`
+
+Run only Playwright tests:
+
+```bash
+python -m pytest tests/playwright -m playwright
+```
+
+Switch Playwright engine:
+
+```bash
+python -m pytest tests/playwright -m playwright --pw-browser=webkit
+python -m pytest tests/playwright -m playwright --pw-browser=firefox
+```
+
+Run headed mode:
+
+```bash
+python -m pytest tests/playwright -m playwright --pw-headed
 ```
 
 ## Adding a New Site

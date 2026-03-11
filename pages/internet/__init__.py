@@ -24,7 +24,6 @@ _EXPORTS: dict[str, str] = {
     "FloatingMenuPage": "floating_menu_page",
     "ForgotPasswordPage": "forgot_password_page",
     "GeolocationPage": "geolocation_page",
-    "HomePage": "homepage",
     "HorizontalSliderPage": "horizontal_slider_page",
     "HoversPage": "hovers_page",
     "IFramePage": "iframe_page",
@@ -96,7 +95,6 @@ if TYPE_CHECKING:
     from .floating_menu_page import FloatingMenuPage
     from .forgot_password_page import ForgotPasswordPage
     from .geolocation_page import GeolocationPage
-    from .homepage import HomePage
     from .horizontal_slider_page import HorizontalSliderPage
     from .hovers_page import HoversPage
     from .iframe_page import IFramePage

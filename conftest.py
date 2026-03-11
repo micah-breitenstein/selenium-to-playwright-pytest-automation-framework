@@ -296,7 +296,11 @@ def driver(request, base_url):
 # OPTIONAL: Reset state between tests
 # -------------------------
 @pytest.fixture(autouse=True)
-def _reset_between_tests(driver, base_url, request):
+def _reset_between_tests(base_url, request):
+    if "driver" not in request.fixturenames:
+        return
+
+    driver = request.getfixturevalue("driver")
     browser = request.config.getoption("--browser")
     try:
         driver.delete_all_cookies()
