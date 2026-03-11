@@ -13,7 +13,7 @@ class PWFileDownloadPage(PWBasePage):
 
     def open(self) -> "PWFileDownloadPage":
         self.go(self.URL_PATH)
-        self.expect_visible(self.FILE_LINKS)
+        self.page.wait_for_selector(self.FILE_LINKS, timeout=self.config.timeout_ms)
         return self
 
     def file_hrefs(self) -> list[str]:

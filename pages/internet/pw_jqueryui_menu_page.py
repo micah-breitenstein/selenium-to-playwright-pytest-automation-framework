@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from urllib.parse import urljoin
+
 from pages.core.pw_base_page import PWBasePage
 
 
@@ -47,4 +49,4 @@ class PWJQueryUIMenuPage(PWBasePage):
         )
         if not href:
             raise AssertionError("No href found for Back to JQuery UI")
-        return href
+        return urljoin(self.config.base_url + "/", href)
