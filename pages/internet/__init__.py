@@ -23,6 +23,7 @@ _EXPORTS: dict[str, str] = {
     "DropdownPage": "dropdown_page",
     "PWDropdownPage": "pw_dropdown_page",
     "DynamicContentPage": "dynamic_content_page",
+    "PWDynamicContentPage": "pw_dynamic_content_page",
     "DynamicLoadingPage": "dynamic_loading_page",
     "EntryAdPage": "entry_ad_page",
     "ExitIntentPage": "exit_intent_page",
@@ -112,6 +113,7 @@ if TYPE_CHECKING:
     from .dropdown_page import DropdownPage
     from .pw_dropdown_page import PWDropdownPage
     from .dynamic_content_page import DynamicContentPage
+    from .pw_dynamic_content_page import PWDynamicContentPage
     from .dynamic_loading_page import DynamicLoadingPage
     from .entry_ad_page import EntryAdPage
     from .exit_intent_page import ExitIntentPage
