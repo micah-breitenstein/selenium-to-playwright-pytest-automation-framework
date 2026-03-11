@@ -38,6 +38,7 @@ _EXPORTS: dict[str, str] = {
     "JavaScriptAlertsPage": "javascript_alerts_page",
     "JavaScriptErrorPage": "javascript_error_page",
     "KeyPressesPage": "key_presses_page",
+    "PWKeyPressesPage": "pw_key_presses_page",
     "LargeDomPage": "large_dom_page",
     "LandingPage": "landing_page",
     "LoginPage": "login_page",
@@ -114,6 +115,7 @@ if TYPE_CHECKING:
     from .javascript_error_page import JavaScriptErrorPage
     from .jqueryui_menu_page import JQueryUIMenuPage
     from .key_presses_page import KeyPressesPage
+    from .pw_key_presses_page import PWKeyPressesPage
     from .landing_page import LandingPage
     from .large_dom_page import LargeDomPage
     from .login_page import LoginPage
