@@ -32,6 +32,7 @@ _EXPORTS: dict[str, str] = {
     "ExitIntentPage": "exit_intent_page",
     "FileDownloadPage": "file_download_page",
     "FileUploadPage": "file_upload_page",
+    "PWFileUploadPage": "pw_file_upload_page",
     "FloatingMenuPage": "floating_menu_page",
     "PWFloatingMenuPage": "pw_floating_menu_page",
     "ForgotPasswordPage": "forgot_password_page",
@@ -136,6 +137,7 @@ if TYPE_CHECKING:
     from .exit_intent_page import ExitIntentPage
     from .file_download_page import FileDownloadPage
     from .file_upload_page import FileUploadPage
+    from .pw_file_upload_page import PWFileUploadPage
     from .floating_menu_page import FloatingMenuPage
     from .pw_floating_menu_page import PWFloatingMenuPage
     from .forgot_password_page import ForgotPasswordPage
