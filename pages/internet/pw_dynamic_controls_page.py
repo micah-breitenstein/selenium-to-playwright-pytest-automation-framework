@@ -30,7 +30,7 @@ class PWDynamicControlsPage(PWBasePage):
         self.expect_visible(self.MESSAGE)
         self.page.wait_for_function(
             "sel => !document.querySelector(sel).disabled",
-            self.INPUT_FIELD,
+            arg=self.INPUT_FIELD,
             timeout=self.config.timeout_ms,
         )
         return self
@@ -40,7 +40,7 @@ class PWDynamicControlsPage(PWBasePage):
         self.expect_visible(self.MESSAGE)
         self.page.wait_for_function(
             "sel => document.querySelector(sel).disabled",
-            self.INPUT_FIELD,
+            arg=self.INPUT_FIELD,
             timeout=self.config.timeout_ms,
         )
         return self
