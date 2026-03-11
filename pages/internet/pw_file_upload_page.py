@@ -21,7 +21,7 @@ class PWFileUploadPage(PWBasePage):
         return self
 
     def upload_file_with_unique_name(self, original_file: Path | str) -> str:
-        original = Path(original_file)
+        original = Path(original_file).resolve()
         if not original.exists():
             raise FileNotFoundError(f"Upload file not found: {original}")
 
@@ -32,10 +32,18 @@ class PWFileUploadPage(PWBasePage):
             shutil.copy(original, temp_path)
 
             self.page.locator(self.FILE_INPUT).set_input_files(str(temp_path))
-            self.click(self.SUBMIT_BTN)
+            self.page.locator(self.SUBMIT_BTN).click(
+                timeout=self.config.timeout_ms,
+                no_wait_after=True,
+            )
             self.page.wait_for_function(
                 "(selector) => (document.querySelector(selector)?.textContent || '').includes('File Uploaded')",
                 arg=self.RESULT_HEADER,
+                timeout=self.config.timeout_ms,
+            )
+            self.page.wait_for_function(
+                "([selector, expected]) => (document.querySelector(selector)?.textContent || '').trim() === expected",
+                arg=[self.UPLOADED_FILENAME, unique_name],
                 timeout=self.config.timeout_ms,
             )
 
