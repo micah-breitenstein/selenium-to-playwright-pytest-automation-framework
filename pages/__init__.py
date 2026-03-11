@@ -49,6 +49,7 @@ if TYPE_CHECKING:
     from .internet.drag_and_drop_page import DragAndDropPage
     from .internet.dropdown_page import DropdownPage
     from .internet.dynamic_content_page import DynamicContentPage
+    from .internet.dynamic_controls_page import DynamicControlsPage
     from .internet.dynamic_loading_page import DynamicLoadingPage
     from .internet.entry_ad_page import EntryAdPage
     from .internet.exit_intent_page import ExitIntentPage

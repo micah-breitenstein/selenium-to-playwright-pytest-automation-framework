@@ -26,6 +26,7 @@ _EXPORTS: dict[str, str] = {
     "PWDragAndDropPage": "pw_drag_and_drop_page",
     "DropdownPage": "dropdown_page",
     "PWDropdownPage": "pw_dropdown_page",
+    "DynamicControlsPage": "dynamic_controls_page",
     "PWDynamicControlsPage": "pw_dynamic_controls_page",
     "DynamicContentPage": "dynamic_content_page",
     "PWDynamicContentPage": "pw_dynamic_content_page",
@@ -136,6 +137,7 @@ if TYPE_CHECKING:
     from .drag_and_drop_page import DragAndDropPage
     from .dropdown_page import DropdownPage
     from .dynamic_content_page import DynamicContentPage
+    from .dynamic_controls_page import DynamicControlsPage
     from .dynamic_loading_page import DynamicLoadingPage
     from .entry_ad_page import EntryAdPage
     from .exit_intent_page import ExitIntentPage
