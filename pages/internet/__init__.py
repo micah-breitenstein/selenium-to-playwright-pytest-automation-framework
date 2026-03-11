@@ -47,6 +47,7 @@ _EXPORTS: dict[str, str] = {
     "LoginPage": "login_page",
     "NestedFramesPage": "nested_frames_page",
     "NotificationMessagePage": "notification_message_page",
+    "PWNotificationMessagePage": "pw_notification_message_page",
     "RedirectorPage": "redirector_page",
     "PWRedirectorPage": "pw_redirector_page",
     "SecureAreaPage": "secure_area_page",
@@ -129,6 +130,7 @@ if TYPE_CHECKING:
     from .login_page import LoginPage
     from .nested_frames_page import NestedFramesPage
     from .notification_message_page import NotificationMessagePage
+    from .pw_notification_message_page import PWNotificationMessagePage
     from .redirector_page import RedirectorPage
     from .pw_redirector_page import PWRedirectorPage
     from .secure_area_page import SecureAreaPage
