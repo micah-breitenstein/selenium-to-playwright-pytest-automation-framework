@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from playwright.sync_api import TimeoutError as PlaywrightTimeoutError
+
 from pages.core.pw_base_page import PWBasePage
 
 
@@ -12,7 +14,10 @@ class PWSortableTablesPage(PWBasePage):
     TABLE2_ROWS = "#table2 tbody tr"
 
     def load(self) -> "PWSortableTablesPage":
-        self.go(self.URL_PATH)
+        try:
+            self.go(self.URL_PATH)
+        except PlaywrightTimeoutError:
+            self.go(self.URL_PATH)
         self.expect_visible(self.TABLE1)
         self.expect_visible(self.TABLE2)
         return self
