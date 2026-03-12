@@ -8,6 +8,7 @@ class PWEntryAdPage(PWBasePage):
     MODAL_CONTENT = "#modal .modal"
     MODAL_TITLE = "#modal .modal-title h3"
     MODAL_CLOSE = "#modal .modal-footer p"
+    RESTART_AD = "#restart-ad"
 
     def open(self) -> "PWEntryAdPage":
         self.go(self.URL_PATH)
@@ -34,4 +35,12 @@ class PWEntryAdPage(PWBasePage):
         self.locator(self.MODAL_CONTENT).wait_for(
             state="hidden", timeout=self.config.timeout_ms
         )
+        return self
+
+    def restart_ad(self) -> "PWEntryAdPage":
+        self.click(self.RESTART_AD)
+        return self
+
+    def wait_for_modal(self, timeout_ms: int = 10000) -> "PWEntryAdPage":
+        self.locator(self.MODAL_CONTENT).wait_for(state="visible", timeout=timeout_ms)
         return self

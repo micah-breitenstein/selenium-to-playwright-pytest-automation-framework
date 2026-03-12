@@ -20,3 +20,17 @@ class PWInputsPage(PWBasePage):
     def set_number(self, n: int) -> "PWInputsPage":
         self.fill(self.NUMBER_INPUT, str(n))
         return self
+
+    def increment(self, times: int = 1) -> "PWInputsPage":
+        target = self.locator(self.NUMBER_INPUT)
+        target.click(timeout=self.config.timeout_ms)
+        for _ in range(times):
+            target.press("ArrowUp", timeout=self.config.timeout_ms)
+        return self
+
+    def decrement(self, times: int = 1) -> "PWInputsPage":
+        target = self.locator(self.NUMBER_INPUT)
+        target.click(timeout=self.config.timeout_ms)
+        for _ in range(times):
+            target.press("ArrowDown", timeout=self.config.timeout_ms)
+        return self
