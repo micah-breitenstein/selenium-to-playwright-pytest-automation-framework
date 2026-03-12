@@ -47,6 +47,15 @@ python -m pytest --browser=chrome
 python -m pytest -n auto --browser=chrome --headless
 ```
 
+Or use Makefile shortcuts:
+
+```bash
+make test-parallel
+make test-parallel-headed
+make test-parallel-selenium
+make test-parallel-selenium-headed
+```
+
 ### Playwright (side-by-side)
 
 Run the minimal Playwright smoke tests without changing Selenium tests:
@@ -69,6 +78,7 @@ Or use Makefile shortcuts:
 make pw-test
 make pw-headed
 make pw-parallel
+make pw-parallel-headed
 ```
 
 ### Specify a site explicitly
