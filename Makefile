@@ -1,4 +1,4 @@
-.PHONY: install test test-headless test-parallel pw-test pw-headed pw-parallel check clean help lint format
+.PHONY: install test test-headless test-parallel test-parallel-selenium test-safari pw-test pw-headed pw-parallel check clean help lint format
 
 SITE     ?= internet
 BROWSER  ?= chrome
@@ -19,6 +19,9 @@ test-headless: ## Run tests in headless Chrome
 
 test-parallel: ## Run tests in parallel headless Chrome
 	$(PYTEST) -n auto --site=$(SITE) --browser=chrome --headless
+
+test-parallel-selenium: ## Run Selenium tests in parallel headless Chrome (exclude Playwright)
+	$(PYTEST) -n auto --site=$(SITE) --browser=chrome --headless -m "not playwright"
 
 test-safari: ## Run tests in Safari (serial only)
 	$(PYTEST) --site=$(SITE) --browser=safari
