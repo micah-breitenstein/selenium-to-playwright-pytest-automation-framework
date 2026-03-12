@@ -51,9 +51,9 @@ Or use Makefile shortcuts:
 
 ```bash
 make test-parallel
-make test-parallel-headed
+make framework-parallel-headed
 make test-parallel-selenium
-make test-parallel-selenium-headed
+make selenium-parallel-headed
 ```
 
 ### Playwright (side-by-side)
@@ -78,7 +78,7 @@ Or use Makefile shortcuts:
 make pw-test
 make pw-headed
 make pw-parallel
-make pw-parallel-headed
+make playwright-parallel-headed
 ```
 
 ### Specify a site explicitly

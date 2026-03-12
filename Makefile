@@ -1,4 +1,4 @@
-.PHONY: install test test-headless test-parallel test-parallel-headed test-parallel-selenium test-parallel-selenium-headed test-safari pw-test pw-headed pw-parallel pw-parallel-headed check clean help lint format
+.PHONY: install test test-headless test-parallel test-parallel-headed test-parallel-selenium test-parallel-selenium-headed test-safari pw-test pw-headed pw-parallel pw-parallel-headed framework-parallel-headed selenium-parallel-headed playwright-parallel-headed check clean help lint format
 
 SITE     ?= internet
 BROWSER  ?= chrome
@@ -20,14 +20,18 @@ test-headless: ## Run tests in headless Chrome
 test-parallel: ## Run tests in parallel headless Chrome
 	$(PYTEST) -n auto --site=$(SITE) --browser=chrome --headless
 
-test-parallel-headed: ## Run tests in parallel headed Chrome
+framework-parallel-headed: ## Run framework tests in parallel headed Chrome
 	$(PYTEST) -n auto --site=$(SITE) --browser=chrome
+
+test-parallel-headed: framework-parallel-headed
 
 test-parallel-selenium: ## Run Selenium tests in parallel headless Chrome (exclude Playwright)
 	$(PYTEST) -n auto --site=$(SITE) --browser=chrome --headless -m "not playwright"
 
-test-parallel-selenium-headed: ## Run Selenium tests in parallel headed Chrome (exclude Playwright)
+selenium-parallel-headed: ## Run Selenium tests in parallel headed Chrome (exclude Playwright)
 	$(PYTEST) -n auto --site=$(SITE) --browser=chrome -m "not playwright"
+
+test-parallel-selenium-headed: selenium-parallel-headed
 
 test-safari: ## Run tests in Safari (serial only)
 	$(PYTEST) --site=$(SITE) --browser=safari
@@ -41,8 +45,10 @@ pw-headed: ## Run Playwright tests in headed mode
 pw-parallel: ## Run Playwright tests in parallel
 	$(PYTEST) tests/playwright -m playwright -n auto --pw-browser=chromium
 
-pw-parallel-headed: ## Run Playwright tests in parallel headed mode
+playwright-parallel-headed: ## Run Playwright tests in parallel headed mode
 	$(PYTEST) tests/playwright -m playwright -n auto --pw-headed --pw-browser=chromium
+
+pw-parallel-headed: playwright-parallel-headed
 
 lint: ## Run ruff linter
 	ruff check .
