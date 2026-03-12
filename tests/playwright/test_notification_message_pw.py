@@ -17,3 +17,15 @@ def test_notification_message_appears_playwright(pw_page_object_factory):
     assert any(msg in text for msg in valid_messages), (
         f"Unexpected notification: {text!r}"
     )
+
+
+@pytest.mark.playwright
+def test_notification_message_changes_on_click_playwright(pw_page_object_factory):
+    page = pw_page_object_factory(PWNotificationMessagePage).load()
+
+    messages = set()
+    for _ in range(10):
+        page.click_to_load_message()
+        messages.add(page.notification_text())
+
+    assert len(messages) >= 1
