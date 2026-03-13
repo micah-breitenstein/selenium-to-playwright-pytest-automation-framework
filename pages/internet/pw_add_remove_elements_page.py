@@ -14,10 +14,12 @@ class PWAddRemoveElementsPage(PWBasePage):
         self.go(self.URL_PATH)
         self.expect_visible(self.ADD_BUTTON)
 
-    def add_element(self, times: int = 1) -> None:
+    def add_element(self, times: int = 1, wait_ms: int = 50) -> None:
         button = self.locator(self.ADD_BUTTON)
         for _ in range(times):
             button.click(timeout=self.config.timeout_ms)
+            if wait_ms:
+                self.page.wait_for_timeout(wait_ms)
 
     def delete_count(self) -> int:
         return self.locator(self.DELETE_BUTTONS).count()
