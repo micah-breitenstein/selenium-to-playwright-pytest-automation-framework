@@ -16,12 +16,21 @@ def pytest_addoption(parser):
         action="store_true",
         help="Run Playwright in headed mode (default is headless)",
     )
+    parser.addoption(
+        "--pw-slowmo",
+        action="store",
+        type=int,
+        default=0,
+        metavar="MS",
+        help="Slow down Playwright operations by MS milliseconds (useful with --pw-headed)",
+    )
 
 
 @pytest.fixture(scope="session")
 def pw_browser(request) -> Browser:
     engine = str(request.config.getoption("--pw-browser", default="chromium")).lower()
     headed = bool(request.config.getoption("--pw-headed", default=False))
+    slowmo = int(request.config.getoption("--pw-slowmo", default=0))
 
     with sync_playwright() as p:
         browser_type = {
@@ -35,7 +44,7 @@ def pw_browser(request) -> Browser:
                 "Unknown --pw-browser value. Use one of: chromium, firefox, webkit"
             )
 
-        browser = browser_type.launch(headless=not headed)
+        browser = browser_type.launch(headless=not headed, slow_mo=slowmo)
         try:
             yield browser
         finally:
