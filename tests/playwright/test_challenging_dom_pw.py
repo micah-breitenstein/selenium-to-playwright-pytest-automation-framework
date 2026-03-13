@@ -109,7 +109,10 @@ def test_canvas_changes_when_button_clicked_playwright(pw_page_object_factory):
     )
     page.click(page.BLUE_BTN)
     page.page.wait_for_function(
-        "before => document.querySelector('canvas').toDataURL('image/png') !== before",
+        """before => {
+            const c = document.querySelector('canvas');
+            return c !== null && c.toDataURL('image/png') !== before;
+        }""",
         arg=before,
         timeout=10_000,
     )
@@ -131,7 +134,10 @@ def test_answer_changes_when_button_clicked_playwright(pw_page_object_factory):
 
     page.click(page.GREEN_BTN)
     page.page.wait_for_function(
-        "before => document.querySelector('canvas').toDataURL('image/png') !== before",
+        """before => {
+            const c = document.querySelector('canvas');
+            return c !== null && c.toDataURL('image/png') !== before;
+        }""",
         arg=before_canvas,
         timeout=10_000,
     )
