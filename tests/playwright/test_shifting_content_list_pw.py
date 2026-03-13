@@ -46,9 +46,7 @@ def test_shifting_content_list_static_record_changes_position_playwright(
         if len(positions) >= 2:
             break
 
-        page.page.reload(
-            wait_until="domcontentloaded", timeout=page.config.timeout_ms
-        )
+        page.page.reload(wait_until="domcontentloaded", timeout=page.config.timeout_ms)
 
     if len(positions) < 2:
         pytest.skip(
