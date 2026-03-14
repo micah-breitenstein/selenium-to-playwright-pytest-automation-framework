@@ -1,4 +1,4 @@
-.PHONY: install test test-headless test-parallel test-parallel-headed test-parallel-selenium test-parallel-selenium-headed test-safari pw-test pw-headed pw-parallel pw-parallel-headed framework-parallel-headed selenium-parallel-headed playwright-parallel-headed check clean help lint format
+.PHONY: install test test-headless test-parallel test-parallel-headed test-parallel-selenium test-parallel-selenium-headed test-safari selenium-geolocation selenium-geolocation-headed pw-test pw-headed pw-parallel pw-parallel-headed framework-parallel-headed selenium-parallel-headed playwright-parallel-headed check clean help lint format
 
 SITE     ?= internet
 BROWSER  ?= chrome
@@ -35,6 +35,12 @@ test-parallel-selenium-headed: selenium-parallel-headed
 
 test-safari: ## Run tests in Safari (serial only)
 	$(PYTEST) --site=$(SITE) --browser=safari
+
+selenium-geolocation: ## Run Selenium geolocation tests (headless Chrome)
+	$(PYTEST) tests/internet/test_geolocation.py --site=$(SITE) --browser=chrome --headless -m "not playwright"
+
+selenium-geolocation-headed: ## Run Selenium geolocation tests (headed Chrome)
+	$(PYTEST) tests/internet/test_geolocation.py --site=$(SITE) --browser=chrome -m "not playwright"
 
 pw-test: ## Run Playwright tests (chromium)
 	$(PYTEST) tests/playwright -m playwright --pw-browser=chromium
