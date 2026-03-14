@@ -1,5 +1,6 @@
 # pages/geolocation_page.py
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
 
 
 class GeolocationPage:
@@ -18,6 +19,12 @@ class GeolocationPage:
 
     def click_where_am_i(self):
         self.driver.find_element(*self.BTN).click()
+        return self
+
+    def wait_for_coordinates(self, timeout: int = 10):
+        wait = WebDriverWait(self.driver, timeout)
+        wait.until(lambda d: d.find_element(*self.LAT).text.strip() != "")
+        wait.until(lambda d: d.find_element(*self.LONG).text.strip() != "")
         return self
 
     def lat_text(self):
