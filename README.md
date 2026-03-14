@@ -56,6 +56,21 @@ make test-parallel-selenium
 make selenium-parallel-headed
 ```
 
+### Selenium geolocation tests
+
+Run Selenium geolocation coverage only (mocked coordinates + radius/range checks):
+
+```bash
+make selenium-geolocation
+make selenium-geolocation-headed
+```
+
+Direct pytest equivalent:
+
+```bash
+python -m pytest tests/internet/test_geolocation.py --site=internet --browser=chrome --headless -m "not playwright"
+```
+
 ### Playwright (side-by-side)
 
 Run the minimal Playwright smoke tests without changing Selenium tests:
