@@ -73,3 +73,20 @@ def pw_page_object_factory(pw_page: Page, base_url: str):
         return PageClass(pw_page, *args, **kwargs)
 
     return _make
+
+
+@pytest.fixture
+def pw_mock_geolocation(pw_context: BrowserContext, base_url: str):
+    """Configure mocked geolocation for Playwright tests."""
+
+    def _set(latitude: float, longitude: float, accuracy: int = 10):
+        pw_context.grant_permissions(["geolocation"], origin=base_url)
+        pw_context.set_geolocation(
+            {
+                "latitude": latitude,
+                "longitude": longitude,
+                "accuracy": accuracy,
+            }
+        )
+
+    return _set
