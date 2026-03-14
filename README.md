@@ -71,6 +71,21 @@ Direct pytest equivalent:
 python -m pytest tests/internet/test_geolocation.py --site=internet --browser=chrome --headless -m "not playwright"
 ```
 
+### Playwright geolocation tests
+
+Run Playwright geolocation coverage only (mocked coordinates + radius/range checks):
+
+```bash
+make playwright-geolocation
+make playwright-geolocation-headed
+```
+
+Direct pytest equivalent:
+
+```bash
+python -m pytest tests/playwright/test_geolocation_pw.py -m playwright --pw-browser=chromium
+```
+
 ### Playwright (side-by-side)
 
 Run the minimal Playwright smoke tests without changing Selenium tests:
