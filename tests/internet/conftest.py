@@ -33,3 +33,39 @@ def navigate(landing):
             cb = navigate.go_to_checkboxes()
     """
     return landing.load()
+
+
+@pytest.fixture
+def mock_geolocation(driver, request, base_url):
+    """
+    Configure browser geolocation for Chrome/Edge Selenium sessions.
+
+    Usage::
+
+        def test_example(mock_geolocation):
+            mock_geolocation(37.7749, -122.4194)
+    """
+
+    browser = request.config.getoption("--browser")
+    if browser == "safari":
+        pytest.skip("Geolocation override fixture is not supported on Safari")
+
+    def _set(latitude: float, longitude: float, accuracy: int = 10):
+        origin = base_url.rstrip("/")
+        driver.execute_cdp_cmd(
+            "Browser.grantPermissions",
+            {
+                "origin": origin,
+                "permissions": ["geolocation"],
+            },
+        )
+        driver.execute_cdp_cmd(
+            "Emulation.setGeolocationOverride",
+            {
+                "latitude": latitude,
+                "longitude": longitude,
+                "accuracy": accuracy,
+            },
+        )
+
+    return _set
