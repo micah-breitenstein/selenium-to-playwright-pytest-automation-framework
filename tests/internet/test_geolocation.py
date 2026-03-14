@@ -1,43 +1,18 @@
-# tests/test_geolocation.py
 import pytest
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
 
-GEO_URL = "https://the-internet.herokuapp.com/geolocation"
+from pages.internet import GeolocationPage
 
 
 @pytest.mark.no_safari
-def test_geolocation_shows_mocked_coords(driver):
-    # pick something recognizable
+def test_geolocation_shows_mocked_coords(driver, base_url, mock_geolocation):
     latitude = 37.7749
     longitude = -122.4194
 
-    # 1) Grant permission for this origin (prevents prompt from blocking)
-    driver.execute_cdp_cmd(
-        "Browser.grantPermissions",
-        {
-            "origin": "https://the-internet.herokuapp.com",
-            "permissions": ["geolocation"],
-        },
-    )
+    mock_geolocation(latitude, longitude)
+    page = GeolocationPage(driver, base_url=base_url).open().click_where_am_i()
 
-    # 2) Override location
-    driver.execute_cdp_cmd(
-        "Emulation.setGeolocationOverride",
-        {"latitude": latitude, "longitude": longitude, "accuracy": 10},
-    )
-
-    # 3) Load page + click button
-    driver.get(GEO_URL)
-    driver.find_element(By.CSS_SELECTOR, "#content button").click()
-
-    # 4) Assert values populate
-    wait = WebDriverWait(driver, 10)
-    wait.until(lambda d: d.find_element(By.ID, "lat-value").text.strip() != "")
-    wait.until(lambda d: d.find_element(By.ID, "long-value").text.strip() != "")
-
-    lat_text = driver.find_element(By.ID, "lat-value").text.strip()
-    long_text = driver.find_element(By.ID, "long-value").text.strip()
+    lat_text = page.lat_text()
+    long_text = page.long_text()
 
     assert str(latitude) in lat_text
     assert str(longitude) in long_text
