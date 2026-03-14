@@ -69,3 +69,26 @@ def mock_geolocation(driver, request, base_url):
         )
 
     return _set
+
+
+@pytest.fixture
+def deny_geolocation(driver, request, base_url):
+    """
+    Deny geolocation permission for Chrome/Edge Selenium sessions.
+    """
+
+    browser = request.config.getoption("--browser")
+    if browser == "safari":
+        pytest.skip("Geolocation deny fixture is not supported on Safari")
+
+    origin = base_url.rstrip("/")
+    driver.execute_cdp_cmd(
+        "Browser.setPermission",
+        {
+            "origin": origin,
+            "permission": {"name": "geolocation"},
+            "setting": "denied",
+        },
+    )
+
+    return True
