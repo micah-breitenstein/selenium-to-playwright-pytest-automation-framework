@@ -1,4 +1,4 @@
-.PHONY: install test test-headless test-parallel test-parallel-headed test-parallel-selenium test-parallel-selenium-headed test-safari selenium-geolocation selenium-geolocation-headed playwright-geolocation playwright-geolocation-headed pw-test pw-headed pw-parallel pw-parallel-headed framework-parallel-headed selenium-parallel-headed playwright-parallel-headed check clean help lint format
+.PHONY: install test test-headless test-parallel test-parallel-headed test-parallel-selenium test-parallel-selenium-headed test-safari selenium-geolocation selenium-geolocation-headed selenium-geolocation-parks selenium-geolocation-parks-headed playwright-geolocation playwright-geolocation-headed playwright-geolocation-parks playwright-geolocation-parks-headed pw-test pw-headed pw-parallel pw-parallel-headed framework-parallel-headed selenium-parallel-headed playwright-parallel-headed check clean help lint format
 
 SITE     ?= internet
 BROWSER  ?= chrome
@@ -42,11 +42,23 @@ selenium-geolocation: ## Run Selenium geolocation tests (headless Chrome)
 selenium-geolocation-headed: ## Run Selenium geolocation tests (headed Chrome)
 	$(PYTEST) tests/internet/test_geolocation.py --site=$(SITE) --browser=chrome -m "not playwright"
 
+selenium-geolocation-parks: ## Run Selenium nearby-park navigation test (headless Chrome)
+	$(PYTEST) tests/internet/test_geolocation.py::test_geolocation_navigates_google_maps_top_10_named_parks --site=$(SITE) --browser=chrome --headless -m "not playwright" -s -q
+
+selenium-geolocation-parks-headed: ## Run Selenium nearby-park navigation test (headed Chrome)
+	$(PYTEST) tests/internet/test_geolocation.py::test_geolocation_navigates_google_maps_top_10_named_parks --site=$(SITE) --browser=chrome -m "not playwright" -s -q
+
 playwright-geolocation: ## Run Playwright geolocation tests (headless Chromium)
 	$(PYTEST) tests/playwright/test_geolocation_pw.py -m playwright --pw-browser=chromium
 
 playwright-geolocation-headed: ## Run Playwright geolocation tests (headed Chromium)
 	$(PYTEST) tests/playwright/test_geolocation_pw.py -m playwright --pw-headed --pw-browser=chromium
+
+playwright-geolocation-parks: ## Run Playwright nearby-park navigation test (headless Chromium)
+	$(PYTEST) tests/playwright/test_geolocation_pw.py::test_geolocation_navigates_google_maps_all_nearby_parks_playwright -m playwright --pw-browser=chromium -s -q
+
+playwright-geolocation-parks-headed: ## Run Playwright nearby-park navigation test (headed Chromium)
+	$(PYTEST) tests/playwright/test_geolocation_pw.py::test_geolocation_navigates_google_maps_all_nearby_parks_playwright -m playwright --pw-headed --pw-browser=chromium -s -q
 
 pw-test: ## Run Playwright tests (chromium)
 	$(PYTEST) tests/playwright -m playwright --pw-browser=chromium
