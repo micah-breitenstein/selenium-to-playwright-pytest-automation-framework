@@ -24,6 +24,14 @@ def pytest_addoption(parser):
         metavar="MS",
         help="Slow down Playwright operations by MS milliseconds (useful with --pw-headed)",
     )
+    parser.addoption(
+        "--pw-nav-wait-ms",
+        action="store",
+        type=int,
+        default=0,
+        metavar="MS",
+        help="Wait MS after each Google Maps navigation in park-route tests (default: 0)",
+    )
 
 
 @pytest.fixture(scope="session")
@@ -52,8 +60,9 @@ def pw_browser(request) -> Browser:
 
 
 @pytest.fixture
-def pw_context(pw_browser: Browser) -> BrowserContext:
+def pw_context(pw_browser: Browser, base_url: str) -> BrowserContext:
     context = pw_browser.new_context(ignore_https_errors=True)
+    context.grant_permissions(["geolocation"], origin=base_url)
     try:
         yield context
     finally:
@@ -64,6 +73,11 @@ def pw_context(pw_browser: Browser) -> BrowserContext:
 def pw_page(pw_context: BrowserContext) -> Page:
     page = pw_context.new_page()
     yield page
+
+
+@pytest.fixture
+def pw_nav_wait_ms(request) -> int:
+    return int(request.config.getoption("--pw-nav-wait-ms", default=0))
 
 
 @pytest.fixture
@@ -80,7 +94,6 @@ def pw_mock_geolocation(pw_context: BrowserContext, base_url: str):
     """Configure mocked geolocation for Playwright tests."""
 
     def _set(latitude: float, longitude: float, accuracy: int = 10):
-        pw_context.grant_permissions(["geolocation"], origin=base_url)
         pw_context.set_geolocation(
             {
                 "latitude": latitude,
