@@ -1,5 +1,11 @@
 from __future__ import annotations
 
+import json
+import os
+from urllib.error import URLError
+from urllib.parse import urlencode
+from urllib.request import Request, urlopen
+
 import pytest
 
 from pages.internet import PWGeolocationPage
@@ -15,6 +21,288 @@ CITIES = [
     pytest.param(40.7128, -74.0060, id="new_york_city"),
     pytest.param(51.5074, -0.1278, id="london"),
 ]
+
+USER_LATITUDE = 37.7786236
+USER_LONGITUDE = -121.9416398
+USE_MOCK_GEOLOCATION = os.getenv("PW_USE_MOCK_GEO", "1").lower() not in {
+    "0",
+    "false",
+    "no",
+}
+PARK_SEARCH_RADIUS_M = int(os.getenv("PW_PARK_RADIUS_M", "3000"))
+ADDRESS_SEARCH_RADIUS_M = int(os.getenv("PW_ADDRESS_RADIUS_M", "3000"))
+START_ADDRESS_OVERRIDE = os.getenv("PW_START_ADDRESS_OVERRIDE", "").strip()
+
+
+def _parks_nearby(lat: float, lon: float, radius_m: int = 3000) -> list[dict]:
+    query = f"""
+    [out:json][timeout:25];
+    (
+      node[\"leisure\"=\"park\"](around:{radius_m},{lat},{lon});
+      way[\"leisure\"=\"park\"](around:{radius_m},{lat},{lon});
+      relation[\"leisure\"=\"park\"](around:{radius_m},{lat},{lon});
+    );
+    out center tags;
+    """
+
+    payload = urlencode({"data": query}).encode("utf-8")
+    request = Request(
+        "https://overpass-api.de/api/interpreter",
+        data=payload,
+        method="POST",
+        headers={"User-Agent": "selenium-python-basics-geolocation-tests"},
+    )
+
+    try:
+        with urlopen(request, timeout=30) as response:
+            data = json.loads(response.read().decode("utf-8"))
+    except (URLError, TimeoutError, OSError, json.JSONDecodeError) as exc:
+        pytest.skip(f"Overpass API unavailable for nearby-park lookup: {exc}")
+
+    parks: list[dict] = []
+    seen = set()
+    for element in data.get("elements", []):
+        name = element.get("tags", {}).get("name", "Unnamed park")
+        if not name or name == "Unnamed park":
+            continue
+        park_lat = element.get("lat")
+        park_lon = element.get("lon")
+
+        center = element.get("center", {})
+        if park_lat is None:
+            park_lat = center.get("lat")
+        if park_lon is None:
+            park_lon = center.get("lon")
+
+        if park_lat is None or park_lon is None:
+            continue
+
+        key = (name, park_lat, park_lon)
+        if key in seen:
+            continue
+        seen.add(key)
+
+        distance_km = haversine_km(lat, lon, float(park_lat), float(park_lon))
+        parks.append(
+            {
+                "name": name,
+                "latitude": float(park_lat),
+                "longitude": float(park_lon),
+                "distance_km": distance_km,
+            }
+        )
+
+    parks.sort(key=lambda park: park["distance_km"])
+    return parks
+
+
+def _reverse_geocode(latitude: float, longitude: float) -> dict:
+    params = urlencode(
+        {
+            "format": "jsonv2",
+            "lat": f"{latitude}",
+            "lon": f"{longitude}",
+            "addressdetails": 1,
+            "zoom": 18,
+        }
+    )
+    request = Request(
+        f"https://nominatim.openstreetmap.org/reverse?{params}",
+        headers={"User-Agent": "selenium-python-basics-geolocation-tests"},
+    )
+
+    try:
+        with urlopen(request, timeout=30) as response:
+            payload = json.loads(response.read().decode("utf-8"))
+    except (URLError, TimeoutError, OSError, json.JSONDecodeError) as exc:
+        pytest.skip(f"Reverse geocoding unavailable for park address lookup: {exc}")
+
+    return payload
+
+
+def _search_geocode(query: str) -> dict:
+    params = urlencode(
+        {
+            "q": query,
+            "format": "jsonv2",
+            "limit": 1,
+            "addressdetails": 1,
+        }
+    )
+    request = Request(
+        f"https://nominatim.openstreetmap.org/search?{params}",
+        headers={"User-Agent": "selenium-python-basics-geolocation-tests"},
+    )
+
+    try:
+        with urlopen(request, timeout=30) as response:
+            payload = json.loads(response.read().decode("utf-8"))
+    except (URLError, TimeoutError, OSError, json.JSONDecodeError) as exc:
+        pytest.skip(f"Address search unavailable for override lookup: {exc}")
+
+    if not payload:
+        pytest.skip(f"No result found for PW_START_ADDRESS_OVERRIDE={query!r}")
+
+    return payload[0]
+
+
+def _nearest_address_tags(
+    lat: float, lon: float, radius_m: int = ADDRESS_SEARCH_RADIUS_M
+) -> dict[str, str]:
+    query = f"""
+    [out:json][timeout:25];
+    (
+      node["addr:housenumber"](around:{radius_m},{lat},{lon});
+      way["addr:housenumber"](around:{radius_m},{lat},{lon});
+      relation["addr:housenumber"](around:{radius_m},{lat},{lon});
+    );
+    out center tags;
+    """
+
+    payload = urlencode({"data": query}).encode("utf-8")
+    request = Request(
+        "https://overpass-api.de/api/interpreter",
+        data=payload,
+        method="POST",
+        headers={"User-Agent": "selenium-python-basics-geolocation-tests"},
+    )
+
+    try:
+        with urlopen(request, timeout=30) as response:
+            data = json.loads(response.read().decode("utf-8"))
+    except (URLError, TimeoutError, OSError, json.JSONDecodeError):
+        return {}
+
+    best_tags: dict[str, str] = {}
+    best_distance_km: float | None = None
+
+    for element in data.get("elements", []):
+        tags = element.get("tags", {})
+        if not tags.get("addr:housenumber"):
+            continue
+
+        element_lat = element.get("lat")
+        element_lon = element.get("lon")
+        center = element.get("center", {})
+        if element_lat is None:
+            element_lat = center.get("lat")
+        if element_lon is None:
+            element_lon = center.get("lon")
+
+        if element_lat is None or element_lon is None:
+            continue
+
+        distance_km = haversine_km(lat, lon, float(element_lat), float(element_lon))
+        if best_distance_km is None or distance_km < best_distance_km:
+            best_distance_km = distance_km
+            best_tags = tags
+
+    return best_tags
+
+
+def _format_address_fields(
+    geocode_payload: dict, nearest_tags: dict[str, str] | None = None
+) -> dict[str, str]:
+    address = geocode_payload.get("address", {})
+    nearest_tags = nearest_tags or {}
+
+    house_number = nearest_tags.get("addr:housenumber") or address.get("house_number")
+    road_name = (
+        nearest_tags.get("addr:street")
+        or address.get("road")
+        or address.get("pedestrian")
+        or address.get("footway")
+    )
+
+    street_parts = [
+        house_number,
+        road_name,
+    ]
+    full_address = " ".join(part for part in street_parts if part)
+    display_name = geocode_payload.get("display_name") or ""
+    display_address1 = display_name.split(",", 1)[0].strip() if display_name else ""
+    address1 = full_address or display_address1
+    city = (
+        address.get("city")
+        or address.get("town")
+        or address.get("village")
+        or address.get("hamlet")
+    )
+    return {
+        "address1": address1 or "N/A",
+        "address": full_address or "N/A",
+        "city": nearest_tags.get("addr:city") or city or "N/A",
+        "state": nearest_tags.get("addr:state") or address.get("state") or "N/A",
+        "county": address.get("county") or "N/A",
+        "zipcode": nearest_tags.get("addr:postcode") or address.get("postcode") or "N/A",
+    }
+
+
+def _google_maps_search_url(latitude: float, longitude: float) -> str:
+    return (
+        "https://www.google.com/maps/search/?api=1&query="
+        f"{latitude},{longitude}"
+    )
+
+
+def _google_maps_directions_url(
+    origin_latitude: float,
+    origin_longitude: float,
+    destination_latitude: float,
+    destination_longitude: float,
+) -> str:
+    return (
+        "https://www.google.com/maps/dir/?api=1"
+        f"&origin={origin_latitude},{origin_longitude}"
+        f"&destination={destination_latitude},{destination_longitude}"
+        "&travelmode=driving"
+    )
+
+
+def _get_start_address() -> dict[str, str]:
+    if START_ADDRESS_OVERRIDE:
+        print(f"Using start address override: {START_ADDRESS_OVERRIDE}")
+        return _format_address_fields(_search_geocode(START_ADDRESS_OVERRIDE))
+
+    return _format_address_fields(
+        _reverse_geocode(USER_LATITUDE, USER_LONGITUDE),
+    )
+
+
+def _print_starting_point_summary(start_address: dict[str, str]) -> None:
+    print("\n=== Starting Point Summary ===")
+    print(f"Address: {start_address['address1']}")
+    print(f"City: {start_address['city']}")
+    print(f"State: {start_address['state']}")
+    print(f"County: {start_address['county']}")
+    print(f"Zip: {start_address['zipcode']}")
+
+
+def _print_closest_park_summary(parks: list[dict]) -> None:
+    closest = parks[0]
+    closest_maps_url = _google_maps_search_url(
+        closest["latitude"], closest["longitude"]
+    )
+    closest_address = _format_address_fields(
+        _reverse_geocode(closest["latitude"], closest["longitude"])
+    )
+
+    print("\n=== Closest Park Summary ===")
+    print(
+        f"Closest park: {closest['name']} ({closest['distance_km']:.2f} km)"
+        f" | {closest_maps_url}"
+    )
+    print(f"Address: {closest_address['address1']}")
+    print(f"City: {closest_address['city']}")
+    print(f"State: {closest_address['state']}")
+    print(f"County: {closest_address['county']}")
+    print(f"Zip: {closest_address['zipcode']}")
+
+    coyote_crossing = [
+        park["name"] for park in parks if "coyote crossing" in park["name"].lower()
+    ]
+    if coyote_crossing:
+        print(f"Likely match: {coyote_crossing[0]}")
 
 
 @pytest.mark.playwright
@@ -66,3 +354,93 @@ def test_geolocation_coordinates_are_in_valid_numeric_ranges_playwright(
     actual_long = parse_coordinate(page.long_text())
 
     assert coordinates_in_valid_range(actual_lat, actual_long)
+
+
+@pytest.mark.playwright
+def test_geolocation_logs_nearby_parks_for_user_coordinates_playwright(
+    pw_mock_geolocation, pw_page, base_url
+):
+    if USE_MOCK_GEOLOCATION:
+        pw_mock_geolocation(USER_LATITUDE, USER_LONGITUDE)
+        print(f"Using mocked geolocation: ({USER_LATITUDE}, {USER_LONGITUDE})")
+    else:
+        # Playwright has no real GPS access; USE_MOCK_GEOLOCATION=0 means
+        # skip the page interaction and use USER_LATITUDE/USER_LONGITUDE directly.
+        print(
+            f"Mock disabled — using USER_LATITUDE/USER_LONGITUDE directly: "
+            f"({USER_LATITUDE}, {USER_LONGITUDE})"
+        )
+
+    page = PWGeolocationPage(pw_page, base_url=base_url).open()
+    page.click_where_am_i().wait_for_coordinates()
+
+    actual_lat = (
+        parse_coordinate(page.lat_text()) if USE_MOCK_GEOLOCATION else USER_LATITUDE
+    )
+    actual_long = (
+        parse_coordinate(page.long_text()) if USE_MOCK_GEOLOCATION else USER_LONGITUDE
+    )
+
+    parks = _parks_nearby(actual_lat, actual_long, radius_m=PARK_SEARCH_RADIUS_M)
+
+    start_address = _get_start_address()
+
+    assert parks, (
+        f"No nearby parks found within {PARK_SEARCH_RADIUS_M}m of "
+        f"({actual_lat}, {actual_long})"
+    )
+
+    print(f"Nearby parks for ({actual_lat}, {actual_long}):")
+    for park in parks[:10]:
+        maps_url = _google_maps_search_url(park["latitude"], park["longitude"])
+        print(f" - {park['name']} ({park['distance_km']:.2f} km) | {maps_url}")
+
+    _print_starting_point_summary(start_address)
+    _print_closest_park_summary(parks)
+
+
+@pytest.mark.playwright
+def test_geolocation_navigates_google_maps_all_nearby_parks_playwright(
+    pw_mock_geolocation, pw_page, base_url, pw_nav_wait_ms
+):
+    if USE_MOCK_GEOLOCATION:
+        pw_mock_geolocation(USER_LATITUDE, USER_LONGITUDE)
+
+    page = PWGeolocationPage(pw_page, base_url=base_url).open()
+    page.click_where_am_i().wait_for_coordinates()
+
+    actual_lat = (
+        parse_coordinate(page.lat_text()) if USE_MOCK_GEOLOCATION else USER_LATITUDE
+    )
+    actual_long = (
+        parse_coordinate(page.long_text()) if USE_MOCK_GEOLOCATION else USER_LONGITUDE
+    )
+    parks = _parks_nearby(actual_lat, actual_long, radius_m=PARK_SEARCH_RADIUS_M)
+
+    if not parks:
+        pytest.skip(f"No named parks found near ({actual_lat}, {actual_long})")
+
+    parks_to_visit = parks[:10]
+
+    start_address = _get_start_address()
+
+    print(
+        f"Navigating top {len(parks_to_visit)} named parks for "
+        f"({actual_lat}, {actual_long})"
+    )
+    for index, park in enumerate(parks_to_visit, start=1):
+        maps_url = _google_maps_directions_url(
+            actual_lat,
+            actual_long,
+            park["latitude"],
+            park["longitude"],
+        )
+        print(
+            f"[{index}] {park['name']} ({park['distance_km']:.2f} km) -> {maps_url}"
+        )
+        pw_page.goto(maps_url, wait_until="domcontentloaded", timeout=60_000)
+        if pw_nav_wait_ms > 0:
+            pw_page.wait_for_timeout(pw_nav_wait_ms)
+
+    _print_starting_point_summary(start_address)
+    _print_closest_park_summary(parks)
