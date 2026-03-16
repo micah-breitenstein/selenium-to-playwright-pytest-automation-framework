@@ -637,9 +637,7 @@ def test_geolocation_navigates_google_maps_all_nearby_parks_playwright(
         print(
             f"[{index}] {park['name']} ({park['distance_km']:.2f} km) -> {maps_url}"
         )
-        pw_page.goto(maps_url, wait_until="domcontentloaded", timeout=60_000)
-        if pw_nav_wait_ms > 0:
-            pw_page.wait_for_timeout(pw_nav_wait_ms)
+        _navigate_route(pw_page, maps_url, pw_nav_wait_ms)
 
     _print_starting_point_summary(start_address)
     _print_closest_park_summary(parks)
