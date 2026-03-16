@@ -232,14 +232,14 @@ def _targets_nearby_nominatim(
             continue
         seen.add(key)
 
-        distance_km = haversine_km(lat, lon, store_lat, store_lon)
         targets.append(
-            {
-                "name": str(name),
-                "latitude": store_lat,
-                "longitude": store_lon,
-                "distance_km": distance_km,
-            }
+            _place_record(
+                name=str(name),
+                origin_lat=lat,
+                origin_lon=lon,
+                place_lat=store_lat,
+                place_lon=store_lon,
+            )
         )
 
     targets.sort(key=lambda store: store["distance_km"])
