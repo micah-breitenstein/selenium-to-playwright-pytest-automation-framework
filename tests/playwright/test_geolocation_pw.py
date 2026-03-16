@@ -487,7 +487,12 @@ def _print_closest_park_summary(parks: list[dict]) -> None:
         print(f"Likely match: {coyote_crossing[0]}")
 
 
-def _print_target_primary_backup_summary(primary: dict, backup: dict) -> None:
+def _print_target_primary_backup_summary(
+    primary: dict,
+    backup: dict,
+    primary_route_url: str,
+    backup_route_url: str,
+) -> None:
     primary_maps_url = _google_maps_search_url(
         primary["latitude"], primary["longitude"]
     )
@@ -498,10 +503,12 @@ def _print_target_primary_backup_summary(primary: dict, backup: dict) -> None:
         f"Primary: {primary['name']} ({primary['distance_km']:.2f} km)"
         f" | {primary_maps_url}"
     )
+    print(f"Primary route: {primary_route_url}")
     print(
         f"Backup: {backup['name']} ({backup['distance_km']:.2f} km)"
         f" | {backup_maps_url}"
     )
+    print(f"Backup route: {backup_route_url}")
 
 
 @pytest.mark.playwright
@@ -703,4 +710,9 @@ def test_geolocation_navigates_to_closest_target_with_backup_playwright(
     _navigate_route(pw_page, backup_route_url, pw_nav_wait_ms)
 
     _print_starting_point_summary(start_address)
-    _print_target_primary_backup_summary(primary, backup)
+    _print_target_primary_backup_summary(
+        primary,
+        backup,
+        primary_route_url,
+        backup_route_url,
+    )
