@@ -144,15 +144,7 @@ def _targets_nearby(lat: float, lon: float, radius_m: int = 20000) -> list[dict]
         if "target" not in name.lower():
             continue
 
-        store_lat = element.get("lat")
-        store_lon = element.get("lon")
-
-        center = element.get("center", {})
-        if store_lat is None:
-            store_lat = center.get("lat")
-        if store_lon is None:
-            store_lon = center.get("lon")
-
+        store_lat, store_lon = _element_coordinates(element)
         if store_lat is None or store_lon is None:
             continue
 
