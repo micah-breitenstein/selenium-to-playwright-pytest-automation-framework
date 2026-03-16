@@ -86,15 +86,7 @@ def _parks_nearby(lat: float, lon: float, radius_m: int = 3000) -> list[dict]:
         name = element.get("tags", {}).get("name", "Unnamed park")
         if not name or name == "Unnamed park":
             continue
-        park_lat = element.get("lat")
-        park_lon = element.get("lon")
-
-        center = element.get("center", {})
-        if park_lat is None:
-            park_lat = center.get("lat")
-        if park_lon is None:
-            park_lon = center.get("lon")
-
+        park_lat, park_lon = _element_coordinates(element)
         if park_lat is None or park_lon is None:
             continue
 
