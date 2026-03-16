@@ -193,7 +193,7 @@ def _targets_nearby_nominatim(
     )
 
     try:
-        with urlopen(request, timeout=12) as response:
+        with urlopen(request, timeout=TARGET_HTTP_TIMEOUT_S) as response:
             data = json.loads(response.read().decode("utf-8"))
     except (URLError, TimeoutError, OSError, json.JSONDecodeError):
         return []
