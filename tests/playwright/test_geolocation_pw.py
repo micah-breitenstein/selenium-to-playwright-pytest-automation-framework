@@ -169,14 +169,14 @@ def _targets_nearby(lat: float, lon: float, radius_m: int = 20000) -> list[dict]
             continue
         seen.add(key)
 
-        distance_km = haversine_km(lat, lon, float(store_lat), float(store_lon))
         targets.append(
-            {
-                "name": name,
-                "latitude": float(store_lat),
-                "longitude": float(store_lon),
-                "distance_km": distance_km,
-            }
+            _place_record(
+                name=name,
+                origin_lat=lat,
+                origin_lon=lon,
+                place_lat=store_lat,
+                place_lon=store_lon,
+            )
         )
 
     targets.sort(key=lambda store: store["distance_km"])
