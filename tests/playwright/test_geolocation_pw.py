@@ -39,6 +39,22 @@ TARGET_HTTP_TIMEOUT_S = int(os.getenv("PW_TARGET_HTTP_TIMEOUT_S", "12"))
 START_ADDRESS_OVERRIDE = os.getenv("PW_START_ADDRESS_OVERRIDE", "").strip()
 
 
+def _element_coordinates(element: dict) -> tuple[float | None, float | None]:
+    latitude = element.get("lat")
+    longitude = element.get("lon")
+
+    center = element.get("center", {})
+    if latitude is None:
+        latitude = center.get("lat")
+    if longitude is None:
+        longitude = center.get("lon")
+
+    if latitude is None or longitude is None:
+        return None, None
+
+    return float(latitude), float(longitude)
+
+
 def _parks_nearby(lat: float, lon: float, radius_m: int = 3000) -> list[dict]:
     query = f"""
     [out:json][timeout:25];
