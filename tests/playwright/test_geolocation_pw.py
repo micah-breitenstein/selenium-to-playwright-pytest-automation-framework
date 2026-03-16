@@ -693,18 +693,14 @@ def test_geolocation_navigates_to_closest_target_with_backup_playwright(
         f"{primary['name']}"
     )
     print(f"Route URL: {primary_route_url}")
-    pw_page.goto(primary_route_url, wait_until="domcontentloaded", timeout=60_000)
-    if pw_nav_wait_ms > 0:
-        pw_page.wait_for_timeout(pw_nav_wait_ms)
+    _navigate_route(pw_page, primary_route_url, pw_nav_wait_ms)
 
     print(
         f"Routing from ({actual_lat}, {actual_long}) to Target 2: "
         f"{backup['name']}"
     )
     print(f"Route URL: {backup_route_url}")
-    pw_page.goto(backup_route_url, wait_until="domcontentloaded", timeout=60_000)
-    if pw_nav_wait_ms > 0:
-        pw_page.wait_for_timeout(pw_nav_wait_ms)
+    _navigate_route(pw_page, backup_route_url, pw_nav_wait_ms)
 
     _print_starting_point_summary(start_address)
     _print_target_primary_backup_summary(primary, backup)
