@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import math
 import os
 from urllib.error import URLError
 from urllib.parse import urlencode
@@ -31,6 +32,7 @@ USE_MOCK_GEOLOCATION = os.getenv("PW_USE_MOCK_GEO", "1").lower() not in {
 }
 PARK_SEARCH_RADIUS_M = int(os.getenv("PW_PARK_RADIUS_M", "3000"))
 ADDRESS_SEARCH_RADIUS_M = int(os.getenv("PW_ADDRESS_RADIUS_M", "3000"))
+TARGET_SEARCH_RADIUS_M = int(os.getenv("PW_TARGET_RADIUS_M", "20000"))
 START_ADDRESS_OVERRIDE = os.getenv("PW_START_ADDRESS_OVERRIDE", "").strip()
 
 
@@ -94,6 +96,161 @@ def _parks_nearby(lat: float, lon: float, radius_m: int = 3000) -> list[dict]:
 
     parks.sort(key=lambda park: park["distance_km"])
     return parks
+
+
+def _targets_nearby(lat: float, lon: float, radius_m: int = 20000) -> list[dict]:
+    query = f"""
+    [out:json][timeout:10];
+    (
+      node["name"~"target", i](around:{radius_m},{lat},{lon});
+      way["name"~"target", i](around:{radius_m},{lat},{lon});
+      relation["name"~"target", i](around:{radius_m},{lat},{lon});
+      node["brand"~"target", i](around:{radius_m},{lat},{lon});
+      way["brand"~"target", i](around:{radius_m},{lat},{lon});
+      relation["brand"~"target", i](around:{radius_m},{lat},{lon});
+    );
+    out center tags;
+    """
+
+    payload = urlencode({"data": query}).encode("utf-8")
+    request = Request(
+        "https://overpass-api.de/api/interpreter",
+        data=payload,
+        method="POST",
+        headers={"User-Agent": "selenium-python-basics-geolocation-tests"},
+    )
+
+    try:
+        with urlopen(request, timeout=12) as response:
+            data = json.loads(response.read().decode("utf-8"))
+    except (URLError, TimeoutError, OSError, json.JSONDecodeError):
+        return []
+
+    targets: list[dict] = []
+    seen = set()
+    for element in data.get("elements", []):
+        name = element.get("tags", {}).get("name", "Target")
+        if "target" not in name.lower():
+            continue
+
+        store_lat = element.get("lat")
+        store_lon = element.get("lon")
+
+        center = element.get("center", {})
+        if store_lat is None:
+            store_lat = center.get("lat")
+        if store_lon is None:
+            store_lon = center.get("lon")
+
+        if store_lat is None or store_lon is None:
+            continue
+
+        key = (name, store_lat, store_lon)
+        if key in seen:
+            continue
+        seen.add(key)
+
+        distance_km = haversine_km(lat, lon, float(store_lat), float(store_lon))
+        targets.append(
+            {
+                "name": name,
+                "latitude": float(store_lat),
+                "longitude": float(store_lon),
+                "distance_km": distance_km,
+            }
+        )
+
+    targets.sort(key=lambda store: store["distance_km"])
+    return targets
+
+
+def _targets_nearby_nominatim(
+    lat: float, lon: float, radius_m: int = 20000, limit: int = 20
+) -> list[dict]:
+    lat_delta = radius_m / 111_320
+    lon_delta = radius_m / (111_320 * max(0.1, math.cos(math.radians(lat))))
+    left = lon - lon_delta
+    right = lon + lon_delta
+    top = lat + lat_delta
+    bottom = lat - lat_delta
+
+    params = urlencode(
+        {
+            "q": "Target",
+            "format": "jsonv2",
+            "limit": limit,
+            "bounded": 1,
+            "viewbox": f"{left},{top},{right},{bottom}",
+            "addressdetails": 1,
+        }
+    )
+    request = Request(
+        f"https://nominatim.openstreetmap.org/search?{params}",
+        headers={"User-Agent": "selenium-python-basics-geolocation-tests"},
+    )
+
+    try:
+        with urlopen(request, timeout=12) as response:
+            data = json.loads(response.read().decode("utf-8"))
+    except (URLError, TimeoutError, OSError, json.JSONDecodeError):
+        return []
+
+    targets: list[dict] = []
+    seen = set()
+    for item in data:
+        name = item.get("name") or item.get("display_name", "Target")
+        if "target" not in str(name).lower():
+            continue
+
+        try:
+            store_lat = float(item.get("lat"))
+            store_lon = float(item.get("lon"))
+        except (TypeError, ValueError):
+            continue
+
+        key = (str(name), store_lat, store_lon)
+        if key in seen:
+            continue
+        seen.add(key)
+
+        distance_km = haversine_km(lat, lon, store_lat, store_lon)
+        targets.append(
+            {
+                "name": str(name),
+                "latitude": store_lat,
+                "longitude": store_lon,
+                "distance_km": distance_km,
+            }
+        )
+
+    targets.sort(key=lambda store: store["distance_km"])
+    return targets
+
+
+def _targets_nearby_with_fallback(
+    lat: float, lon: float, radius_m: int = 20000
+) -> list[dict]:
+    primary_results = _targets_nearby(lat, lon, radius_m=radius_m)
+    if len(primary_results) >= 2:
+        return primary_results
+
+    fallback_results = _targets_nearby_nominatim(lat, lon, radius_m=radius_m)
+
+    merged: list[dict] = []
+    seen = set()
+    for store in [*primary_results, *fallback_results]:
+        key = (
+            store["name"].lower(),
+            round(float(store["latitude"]), 5),
+            round(float(store["longitude"]), 5),
+        )
+        if key in seen:
+            continue
+        seen.add(key)
+        merged.append(store)
+
+    merged.sort(key=lambda store: store["distance_km"])
+    return merged
 
 
 def _reverse_geocode(latitude: float, longitude: float) -> dict:
@@ -305,6 +462,23 @@ def _print_closest_park_summary(parks: list[dict]) -> None:
         print(f"Likely match: {coyote_crossing[0]}")
 
 
+def _print_target_primary_backup_summary(primary: dict, backup: dict) -> None:
+    primary_maps_url = _google_maps_search_url(
+        primary["latitude"], primary["longitude"]
+    )
+    backup_maps_url = _google_maps_search_url(backup["latitude"], backup["longitude"])
+
+    print("\n=== Closest Target Summary ===")
+    print(
+        f"Primary: {primary['name']} ({primary['distance_km']:.2f} km)"
+        f" | {primary_maps_url}"
+    )
+    print(
+        f"Backup: {backup['name']} ({backup['distance_km']:.2f} km)"
+        f" | {backup_maps_url}"
+    )
+
+
 @pytest.mark.playwright
 @pytest.mark.parametrize(("latitude", "longitude"), CITIES)
 def test_geolocation_shows_mocked_coords_for_city_playwright(
@@ -444,3 +618,70 @@ def test_geolocation_navigates_google_maps_all_nearby_parks_playwright(
 
     _print_starting_point_summary(start_address)
     _print_closest_park_summary(parks)
+
+
+@pytest.mark.playwright
+def test_geolocation_navigates_to_closest_target_with_backup_playwright(
+    pw_mock_geolocation, pw_page, base_url, pw_nav_wait_ms
+):
+    if USE_MOCK_GEOLOCATION:
+        pw_mock_geolocation(USER_LATITUDE, USER_LONGITUDE)
+
+    page = PWGeolocationPage(pw_page, base_url=base_url).open()
+    page.click_where_am_i().wait_for_coordinates()
+
+    actual_lat = (
+        parse_coordinate(page.lat_text()) if USE_MOCK_GEOLOCATION else USER_LATITUDE
+    )
+    actual_long = (
+        parse_coordinate(page.long_text()) if USE_MOCK_GEOLOCATION else USER_LONGITUDE
+    )
+
+    targets = _targets_nearby_with_fallback(
+        actual_lat,
+        actual_long,
+        radius_m=TARGET_SEARCH_RADIUS_M,
+    )
+    if len(targets) < 2:
+        pytest.skip(
+            f"Found {len(targets)} Target locations within {TARGET_SEARCH_RADIUS_M}m; "
+            "need at least 2 for primary + backup"
+        )
+
+    primary = targets[0]
+    backup = targets[1]
+    start_address = _get_start_address()
+
+    primary_route_url = _google_maps_directions_url(
+        actual_lat,
+        actual_long,
+        primary["latitude"],
+        primary["longitude"],
+    )
+    backup_route_url = _google_maps_directions_url(
+        actual_lat,
+        actual_long,
+        backup["latitude"],
+        backup["longitude"],
+    )
+
+    print(
+        f"Routing from ({actual_lat}, {actual_long}) to Target 1: "
+        f"{primary['name']}"
+    )
+    print(f"Route URL: {primary_route_url}")
+    pw_page.goto(primary_route_url, wait_until="domcontentloaded", timeout=60_000)
+    if pw_nav_wait_ms > 0:
+        pw_page.wait_for_timeout(pw_nav_wait_ms)
+
+    print(
+        f"Routing from ({actual_lat}, {actual_long}) to Target 2: "
+        f"{backup['name']}"
+    )
+    print(f"Route URL: {backup_route_url}")
+    pw_page.goto(backup_route_url, wait_until="domcontentloaded", timeout=60_000)
+    if pw_nav_wait_ms > 0:
+        pw_page.wait_for_timeout(pw_nav_wait_ms)
+
+    _print_starting_point_summary(start_address)
+    _print_target_primary_backup_summary(primary, backup)
