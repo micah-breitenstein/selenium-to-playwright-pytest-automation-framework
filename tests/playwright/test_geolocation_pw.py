@@ -435,6 +435,12 @@ def _google_maps_directions_url(
     )
 
 
+def _navigate_route(pw_page, route_url: str, wait_ms: int) -> None:
+    pw_page.goto(route_url, wait_until="domcontentloaded", timeout=60_000)
+    if wait_ms > 0:
+        pw_page.wait_for_timeout(wait_ms)
+
+
 def _get_start_address() -> dict[str, str]:
     if START_ADDRESS_OVERRIDE:
         print(f"Using start address override: {START_ADDRESS_OVERRIDE}")
