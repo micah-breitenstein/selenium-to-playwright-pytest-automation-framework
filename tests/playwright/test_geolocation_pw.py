@@ -103,7 +103,7 @@ def _parks_nearby(lat: float, lon: float, radius_m: int = 3000) -> list[dict]:
 
 def _targets_nearby(lat: float, lon: float, radius_m: int = 20000) -> list[dict]:
     query = f"""
-    [out:json][timeout:10];
+    [out:json][timeout:{TARGET_QUERY_TIMEOUT_S}];
     (
       node["name"~"target", i](around:{radius_m},{lat},{lon});
       way["name"~"target", i](around:{radius_m},{lat},{lon});
@@ -124,7 +124,7 @@ def _targets_nearby(lat: float, lon: float, radius_m: int = 20000) -> list[dict]
     )
 
     try:
-        with urlopen(request, timeout=12) as response:
+        with urlopen(request, timeout=TARGET_HTTP_TIMEOUT_S) as response:
             data = json.loads(response.read().decode("utf-8"))
     except (URLError, TimeoutError, OSError, json.JSONDecodeError):
         return []
