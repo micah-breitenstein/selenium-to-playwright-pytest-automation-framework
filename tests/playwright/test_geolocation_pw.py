@@ -55,6 +55,22 @@ def _element_coordinates(element: dict) -> tuple[float | None, float | None]:
     return float(latitude), float(longitude)
 
 
+def _place_record(
+    name: str,
+    origin_lat: float,
+    origin_lon: float,
+    place_lat: float,
+    place_lon: float,
+) -> dict:
+    distance_km = haversine_km(origin_lat, origin_lon, place_lat, place_lon)
+    return {
+        "name": name,
+        "latitude": place_lat,
+        "longitude": place_lon,
+        "distance_km": distance_km,
+    }
+
+
 def _parks_nearby(lat: float, lon: float, radius_m: int = 3000) -> list[dict]:
     query = f"""
     [out:json][timeout:25];
