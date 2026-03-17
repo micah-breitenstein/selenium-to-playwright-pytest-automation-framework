@@ -73,6 +73,10 @@ def _place_record(
     }
 
 
+def _closest_place(places: list[dict]) -> dict:
+    return places[0]
+
+
 def _parks_nearby(lat: float, lon: float, radius_m: int = 3000) -> list[dict]:
     query = f"""
     [out:json][timeout:25];
