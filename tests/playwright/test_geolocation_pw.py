@@ -543,6 +543,9 @@ def _print_target_stop_summary(target: dict, route_url: str) -> None:
 
 def _print_park_stop_summary(park: dict, route_url: str) -> None:
     park_maps_url = _google_maps_search_url(park["latitude"], park["longitude"])
+    park_address = _format_address_fields(
+        _reverse_geocode(park["latitude"], park["longitude"])
+    )
 
     print("\n=== Park Stop Summary ===")
     print(
@@ -550,6 +553,11 @@ def _print_park_stop_summary(park: dict, route_url: str) -> None:
         f" | {park_maps_url}"
     )
     print(f"Route: {route_url}")
+    print(f"Address: {park_address['address1']}")
+    print(f"City: {park_address['city']}")
+    print(f"State: {park_address['state']}")
+    print(f"County: {park_address['county']}")
+    print(f"Zip: {park_address['zipcode']}")
 
 
 @pytest.mark.playwright
