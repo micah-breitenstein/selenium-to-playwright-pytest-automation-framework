@@ -533,6 +533,17 @@ def _print_target_stop_summary(target: dict, route_url: str) -> None:
     print(f"Route: {route_url}")
 
 
+def _print_park_stop_summary(park: dict, route_url: str) -> None:
+    park_maps_url = _google_maps_search_url(park["latitude"], park["longitude"])
+
+    print("\n=== Park Stop Summary ===")
+    print(
+        f"Park: {park['name']} ({park['distance_km']:.2f} km)"
+        f" | {park_maps_url}"
+    )
+    print(f"Route: {route_url}")
+
+
 @pytest.mark.playwright
 @pytest.mark.parametrize(("latitude", "longitude"), CITIES)
 def test_geolocation_shows_mocked_coords_for_city_playwright(
