@@ -522,6 +522,17 @@ def _print_target_primary_backup_summary(
     print(f"Backup route: {backup_route_url}")
 
 
+def _print_target_stop_summary(target: dict, route_url: str) -> None:
+    target_maps_url = _google_maps_search_url(target["latitude"], target["longitude"])
+
+    print("\n=== Target Stop Summary ===")
+    print(
+        f"Target: {target['name']} ({target['distance_km']:.2f} km)"
+        f" | {target_maps_url}"
+    )
+    print(f"Route: {route_url}")
+
+
 @pytest.mark.playwright
 @pytest.mark.parametrize(("latitude", "longitude"), CITIES)
 def test_geolocation_shows_mocked_coords_for_city_playwright(
