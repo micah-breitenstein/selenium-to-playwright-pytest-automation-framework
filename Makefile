@@ -1,4 +1,4 @@
-.PHONY: install test test-headless test-parallel test-parallel-headed test-parallel-selenium test-parallel-selenium-headed test-safari selenium-geolocation selenium-geolocation-headed selenium-geolocation-parks selenium-geolocation-parks-headed playwright-geolocation playwright-geolocation-headed playwright-geolocation-parks playwright-geolocation-parks-headed playwright-geolocation-target playwright-geolocation-target-headed playwright-geolocation-target-park pw-test pw-headed pw-parallel pw-parallel-headed framework-parallel-headed selenium-parallel-headed playwright-parallel-headed check clean help lint format
+.PHONY: install test test-headless test-parallel test-parallel-headed test-parallel-selenium test-parallel-selenium-headed test-safari selenium-geolocation selenium-geolocation-headed selenium-geolocation-parks selenium-geolocation-parks-headed playwright-geolocation playwright-geolocation-headed playwright-geolocation-parks playwright-geolocation-parks-headed playwright-geolocation-target playwright-geolocation-target-headed playwright-geolocation-target-park playwright-geolocation-target-park-headed pw-test pw-headed pw-parallel pw-parallel-headed framework-parallel-headed selenium-parallel-headed playwright-parallel-headed check clean help lint format
 
 SITE     ?= internet
 BROWSER  ?= chrome
@@ -68,6 +68,9 @@ playwright-geolocation-target-headed: ## Run Playwright Target primary/backup ro
 
 playwright-geolocation-target-park: ## Run Playwright nearest Target then Park route test (headless Chromium)
 	$(PYTEST) tests/playwright/test_geolocation_pw.py::test_geolocation_navigates_to_nearest_target_then_park_playwright -m playwright --pw-browser=chromium -s -q
+
+playwright-geolocation-target-park-headed: ## Run Playwright nearest Target then Park route test (headed Chromium)
+	$(PYTEST) tests/playwright/test_geolocation_pw.py::test_geolocation_navigates_to_nearest_target_then_park_playwright -m playwright --pw-headed --pw-browser=chromium -s -q
 
 pw-test: ## Run Playwright tests (chromium)
 	$(PYTEST) tests/playwright -m playwright --pw-browser=chromium
