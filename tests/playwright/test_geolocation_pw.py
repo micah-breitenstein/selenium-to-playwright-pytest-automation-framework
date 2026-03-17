@@ -524,6 +524,9 @@ def _print_target_primary_backup_summary(
 
 def _print_target_stop_summary(target: dict, route_url: str) -> None:
     target_maps_url = _google_maps_search_url(target["latitude"], target["longitude"])
+    target_address = _format_address_fields(
+        _reverse_geocode(target["latitude"], target["longitude"])
+    )
 
     print("\n=== Target Stop Summary ===")
     print(
@@ -531,6 +534,11 @@ def _print_target_stop_summary(target: dict, route_url: str) -> None:
         f" | {target_maps_url}"
     )
     print(f"Route: {route_url}")
+    print(f"Address: {target_address['address1']}")
+    print(f"City: {target_address['city']}")
+    print(f"State: {target_address['state']}")
+    print(f"County: {target_address['county']}")
+    print(f"Zip: {target_address['zipcode']}")
 
 
 def _print_park_stop_summary(park: dict, route_url: str) -> None:
