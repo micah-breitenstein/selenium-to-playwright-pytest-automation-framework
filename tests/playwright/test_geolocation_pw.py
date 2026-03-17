@@ -684,6 +684,73 @@ def test_geolocation_navigates_google_maps_all_nearby_parks_playwright(
 
 
 @pytest.mark.playwright
+def test_geolocation_navigates_to_nearest_target_then_park_playwright(
+    pw_mock_geolocation, pw_page, base_url, pw_nav_wait_ms
+):
+    if USE_MOCK_GEOLOCATION:
+        pw_mock_geolocation(USER_LATITUDE, USER_LONGITUDE)
+
+    page = PWGeolocationPage(pw_page, base_url=base_url).open()
+    page.click_where_am_i().wait_for_coordinates()
+
+    actual_lat = (
+        parse_coordinate(page.lat_text()) if USE_MOCK_GEOLOCATION else USER_LATITUDE
+    )
+    actual_long = (
+        parse_coordinate(page.long_text()) if USE_MOCK_GEOLOCATION else USER_LONGITUDE
+    )
+
+    targets = _targets_nearby_with_fallback(
+        actual_lat,
+        actual_long,
+        radius_m=TARGET_PARK_TARGET_RADIUS_M,
+    )
+    parks = _parks_nearby(
+        actual_lat,
+        actual_long,
+        radius_m=TARGET_PARK_PARK_RADIUS_M,
+    )
+
+    if not targets:
+        pytest.skip(
+            f"No Target locations found within {TARGET_PARK_TARGET_RADIUS_M}m of "
+            f"({actual_lat}, {actual_long})"
+        )
+    if not parks:
+        pytest.skip(
+            f"No parks found within {TARGET_PARK_PARK_RADIUS_M}m of "
+            f"({actual_lat}, {actual_long})"
+        )
+
+    closest_target = _closest_place(targets)
+    closest_park = _closest_place(parks)
+    start_address = _get_start_address()
+
+    target_route_url = _google_maps_directions_url(
+        actual_lat,
+        actual_long,
+        closest_target["latitude"],
+        closest_target["longitude"],
+    )
+    park_route_url = _google_maps_directions_url(
+        closest_target["latitude"],
+        closest_target["longitude"],
+        closest_park["latitude"],
+        closest_park["longitude"],
+    )
+
+    _print_route_leg("Start to Target", closest_target, target_route_url)
+    _navigate_route(pw_page, target_route_url, pw_nav_wait_ms)
+
+    _print_route_leg("Target to Park", closest_park, park_route_url)
+    _navigate_route(pw_page, park_route_url, pw_nav_wait_ms)
+
+    _print_starting_point_summary(start_address)
+    _print_target_stop_summary(closest_target, target_route_url)
+    _print_park_stop_summary(closest_park, park_route_url)
+
+
+@pytest.mark.playwright
 def test_geolocation_navigates_to_closest_target_with_backup_playwright(
     pw_mock_geolocation, pw_page, base_url, pw_nav_wait_ms
 ):
