@@ -447,6 +447,11 @@ def _navigate_route(pw_page, route_url: str, wait_ms: int) -> None:
         pw_page.wait_for_timeout(wait_ms)
 
 
+def _print_route_leg(label: str, destination: dict, route_url: str) -> None:
+    print(f"{label}: {destination['name']} ({destination['distance_km']:.2f} km)")
+    print(f"Route URL: {route_url}")
+
+
 def _get_start_address() -> dict[str, str]:
     if START_ADDRESS_OVERRIDE:
         print(f"Using start address override: {START_ADDRESS_OVERRIDE}")
