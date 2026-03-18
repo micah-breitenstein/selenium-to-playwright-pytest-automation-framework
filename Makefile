@@ -2,6 +2,7 @@
 
 SITE     ?= internet
 BROWSER  ?= chrome
+NAV_WAIT_MS ?= 0
 PYTEST   := python -m pytest
 
 help: ## Show available targets
