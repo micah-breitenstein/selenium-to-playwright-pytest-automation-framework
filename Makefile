@@ -56,22 +56,22 @@ playwright-geolocation-headed: ## Run Playwright geolocation tests (headed Chrom
 	$(PYTEST) tests/playwright/test_geolocation_pw.py -m playwright --pw-headed --pw-browser=chromium
 
 playwright-geolocation-parks: ## Run Playwright nearby-park navigation test (headless Chromium)
-	$(PYTEST) tests/playwright/test_geolocation_pw.py::test_geolocation_navigates_google_maps_all_nearby_parks_playwright -m playwright --pw-browser=chromium -s -q
+	$(PYTEST) tests/playwright/test_geolocation_pw.py::test_geolocation_navigates_google_maps_all_nearby_parks_playwright -m playwright --pw-browser=chromium --pw-nav-wait-ms=$(NAV_WAIT_MS) -s -q
 
 playwright-geolocation-parks-headed: ## Run Playwright nearby-park navigation test (headed Chromium)
-	$(PYTEST) tests/playwright/test_geolocation_pw.py::test_geolocation_navigates_google_maps_all_nearby_parks_playwright -m playwright --pw-headed --pw-browser=chromium -s -q
+	$(PYTEST) tests/playwright/test_geolocation_pw.py::test_geolocation_navigates_google_maps_all_nearby_parks_playwright -m playwright --pw-headed --pw-browser=chromium --pw-nav-wait-ms=$(NAV_WAIT_MS) -s -q
 
 playwright-geolocation-target: ## Run Playwright Target primary/backup routing test (headless Chromium)
-	$(PYTEST) tests/playwright/test_geolocation_pw.py::test_geolocation_navigates_to_closest_target_with_backup_playwright -m playwright --pw-browser=chromium -s -q
+	$(PYTEST) tests/playwright/test_geolocation_pw.py::test_geolocation_navigates_to_closest_target_with_backup_playwright -m playwright --pw-browser=chromium --pw-nav-wait-ms=$(NAV_WAIT_MS) -s -q
 
 playwright-geolocation-target-headed: ## Run Playwright Target primary/backup routing test (headed Chromium)
-	$(PYTEST) tests/playwright/test_geolocation_pw.py::test_geolocation_navigates_to_closest_target_with_backup_playwright -m playwright --pw-headed --pw-browser=chromium -s -q
+	$(PYTEST) tests/playwright/test_geolocation_pw.py::test_geolocation_navigates_to_closest_target_with_backup_playwright -m playwright --pw-headed --pw-browser=chromium --pw-nav-wait-ms=$(NAV_WAIT_MS) -s -q
 
 playwright-geolocation-target-park: ## Run Playwright nearest Target then Park route test (headless Chromium)
-	$(PYTEST) tests/playwright/test_geolocation_pw.py::test_geolocation_navigates_to_nearest_target_then_park_playwright -m playwright --pw-browser=chromium -s -q
+	$(PYTEST) tests/playwright/test_geolocation_pw.py::test_geolocation_navigates_to_nearest_target_then_park_playwright -m playwright --pw-browser=chromium --pw-nav-wait-ms=$(NAV_WAIT_MS) -s -q
 
 playwright-geolocation-target-park-headed: ## Run Playwright nearest Target then Park route test (headed Chromium)
-	$(PYTEST) tests/playwright/test_geolocation_pw.py::test_geolocation_navigates_to_nearest_target_then_park_playwright -m playwright --pw-headed --pw-browser=chromium -s -q
+	$(PYTEST) tests/playwright/test_geolocation_pw.py::test_geolocation_navigates_to_nearest_target_then_park_playwright -m playwright --pw-headed --pw-browser=chromium --pw-nav-wait-ms=$(NAV_WAIT_MS) -s -q
 
 pw-test: ## Run Playwright tests (chromium)
 	$(PYTEST) tests/playwright -m playwright --pw-browser=chromium
