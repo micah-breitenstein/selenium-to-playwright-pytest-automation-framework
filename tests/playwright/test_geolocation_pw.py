@@ -460,6 +460,10 @@ def _google_maps_multi_stop_directions_url(
     )
 
 
+def _google_maps_waypoints_param(places: list[dict]) -> str:
+    return "|".join(f"{place['latitude']},{place['longitude']}" for place in places)
+
+
 def _navigate_route(pw_page, route_url: str, wait_ms: int) -> None:
     pw_page.goto(route_url, wait_until="domcontentloaded", timeout=60_000)
     if wait_ms > 0:
