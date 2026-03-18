@@ -32,7 +32,7 @@ def pytest_addoption(parser):
         type=int,
         default=0,
         metavar="MS",
-        help="Wait MS after each Google Maps navigation in park-route tests (default: 0)",
+        help="Wait MS after each Google Maps navigation so headed map routes remain visible (default: 0)",
     )
 
 
