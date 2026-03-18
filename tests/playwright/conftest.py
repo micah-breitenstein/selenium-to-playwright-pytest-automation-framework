@@ -37,7 +37,7 @@ def pytest_addoption(parser):
 
 
 @pytest.fixture(scope="session")
-def pw_browser(request) -> Browser:
+def pw_browser(request) -> Iterator[Browser]:
     engine = str(request.config.getoption("--pw-browser", default="chromium")).lower()
     headed = bool(request.config.getoption("--pw-headed", default=False))
     slowmo = int(request.config.getoption("--pw-slowmo", default=0))
