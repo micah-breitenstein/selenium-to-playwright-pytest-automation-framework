@@ -441,6 +441,23 @@ def _google_maps_directions_url(
     )
 
 
+def _google_maps_multi_stop_directions_url(
+    origin_latitude: float,
+    origin_longitude: float,
+    waypoint_latitude: float,
+    waypoint_longitude: float,
+    destination_latitude: float,
+    destination_longitude: float,
+) -> str:
+    return (
+        "https://www.google.com/maps/dir/?api=1"
+        f"&origin={origin_latitude},{origin_longitude}"
+        f"&destination={destination_latitude},{destination_longitude}"
+        f"&waypoints={waypoint_latitude},{waypoint_longitude}"
+        "&travelmode=driving"
+    )
+
+
 def _navigate_route(pw_page, route_url: str, wait_ms: int) -> None:
     pw_page.goto(route_url, wait_until="domcontentloaded", timeout=60_000)
     if wait_ms > 0:
