@@ -72,7 +72,7 @@ def pw_context(pw_browser: Browser, base_url: str) -> Iterator[BrowserContext]:
 
 
 @pytest.fixture
-def pw_page(pw_context: BrowserContext) -> Page:
+def pw_page(pw_context: BrowserContext) -> Iterator[Page]:
     page = pw_context.new_page()
     yield page
 
