@@ -1,4 +1,4 @@
-.PHONY: install test test-headless test-parallel test-parallel-headed test-parallel-selenium test-parallel-selenium-headed test-safari selenium-geolocation selenium-geolocation-headed selenium-geolocation-parks selenium-geolocation-parks-headed playwright-geolocation playwright-geolocation-headed playwright-geolocation-parks playwright-geolocation-parks-headed playwright-geolocation-target playwright-geolocation-target-headed playwright-geolocation-target-park playwright-geolocation-target-park-headed pw-test pw-headed pw-parallel pw-parallel-headed framework-parallel-headed selenium-parallel-headed playwright-parallel-headed check clean help lint format
+.PHONY: install test test-headless test-parallel test-parallel-headed test-parallel-selenium test-parallel-selenium-headed test-safari selenium-geolocation selenium-geolocation-headed selenium-geolocation-parks selenium-geolocation-parks-headed playwright-geolocation playwright-geolocation-headed playwright-geolocation-parks playwright-geolocation-parks-headed playwright-geolocation-parks-multistop playwright-geolocation-parks-multistop-headed playwright-geolocation-target playwright-geolocation-target-headed playwright-geolocation-target-park playwright-geolocation-target-park-headed pw-test pw-headed pw-parallel pw-parallel-headed framework-parallel-headed selenium-parallel-headed playwright-parallel-headed check clean help lint format
 
 SITE     ?= internet
 BROWSER  ?= chrome
@@ -60,6 +60,12 @@ playwright-geolocation-parks: ## Run Playwright nearby-park navigation test (hea
 
 playwright-geolocation-parks-headed: ## Run Playwright nearby-park navigation test (headed Chromium)
 	$(PYTEST) tests/playwright/test_geolocation_pw.py::test_geolocation_navigates_google_maps_all_nearby_parks_playwright -m playwright --pw-headed --pw-browser=chromium --pw-nav-wait-ms=$(NAV_WAIT_MS) -s -q
+
+playwright-geolocation-parks-multistop: ## Run Playwright top named parks as one multi-stop route (headless Chromium)
+	$(PYTEST) tests/playwright/test_geolocation_pw.py::test_geolocation_navigates_multi_stop_top_named_parks_playwright -m playwright --pw-browser=chromium --pw-nav-wait-ms=$(NAV_WAIT_MS) -s -q
+
+playwright-geolocation-parks-multistop-headed: ## Run Playwright top named parks as one multi-stop route (headed Chromium)
+	$(PYTEST) tests/playwright/test_geolocation_pw.py::test_geolocation_navigates_multi_stop_top_named_parks_playwright -m playwright --pw-headed --pw-browser=chromium --pw-nav-wait-ms=$(NAV_WAIT_MS) -s -q
 
 playwright-geolocation-target: ## Run Playwright Target primary/backup routing test (headless Chromium)
 	$(PYTEST) tests/playwright/test_geolocation_pw.py::test_geolocation_navigates_to_closest_target_with_backup_playwright -m playwright --pw-browser=chromium --pw-nav-wait-ms=$(NAV_WAIT_MS) -s -q
