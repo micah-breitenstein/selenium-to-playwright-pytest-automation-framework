@@ -606,6 +606,14 @@ def _print_park_stop_summary(park: dict, route_url: str) -> None:
     print(f"Zip: {park_address['zipcode']}")
 
 
+def _print_named_parks_itinerary(parks: list[dict], route_url: str) -> None:
+    print("\n=== Top Named Parks Itinerary ===")
+    print(f"Stops: {len(parks)}")
+    print(f"Route: {route_url}")
+    for index, park in enumerate(parks, start=1):
+        print(f"[{index}] {park['name']} ({park['distance_km']:.2f} km)")
+
+
 @pytest.mark.playwright
 @pytest.mark.parametrize(("latitude", "longitude"), CITIES)
 def test_geolocation_shows_mocked_coords_for_city_playwright(
