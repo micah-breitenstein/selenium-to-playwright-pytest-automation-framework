@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from collections.abc import Iterator
+
 import pytest
 from playwright.sync_api import Browser, BrowserContext, Page, sync_playwright
 
