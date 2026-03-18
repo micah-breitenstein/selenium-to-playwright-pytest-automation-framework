@@ -464,6 +464,29 @@ def _google_maps_waypoints_param(places: list[dict]) -> str:
     return "|".join(f"{place['latitude']},{place['longitude']}" for place in places)
 
 
+def _google_maps_many_stop_directions_url(
+    origin_latitude: float,
+    origin_longitude: float,
+    stops: list[dict],
+) -> str:
+    if not stops:
+        raise ValueError("stops must not be empty")
+
+    destination = stops[-1]
+    waypoints = stops[:-1]
+    waypoint_param = _google_maps_waypoints_param(waypoints) if waypoints else ""
+
+    url = (
+        "https://www.google.com/maps/dir/?api=1"
+        f"&origin={origin_latitude},{origin_longitude}"
+        f"&destination={destination['latitude']},{destination['longitude']}"
+        "&travelmode=driving"
+    )
+    if waypoint_param:
+        url += f"&waypoints={waypoint_param}"
+    return url
+
+
 def _navigate_route(pw_page, route_url: str, wait_ms: int) -> None:
     pw_page.goto(route_url, wait_until="domcontentloaded", timeout=60_000)
     if wait_ms > 0:
