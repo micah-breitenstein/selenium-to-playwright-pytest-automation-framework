@@ -759,28 +759,21 @@ def test_geolocation_navigates_to_nearest_target_then_park_playwright(
     closest_park = _closest_place(parks)
     start_address = _get_start_address()
 
-    target_route_url = _google_maps_directions_url(
+    combined_route_url = _google_maps_multi_stop_directions_url(
         actual_lat,
         actual_long,
-        closest_target["latitude"],
-        closest_target["longitude"],
-    )
-    park_route_url = _google_maps_directions_url(
         closest_target["latitude"],
         closest_target["longitude"],
         closest_park["latitude"],
         closest_park["longitude"],
     )
 
-    _print_route_leg("Start to Target", closest_target, target_route_url)
-    _navigate_route(pw_page, target_route_url, pw_nav_wait_ms)
-
-    _print_route_leg("Target to Park", closest_park, park_route_url)
-    _navigate_route(pw_page, park_route_url, pw_nav_wait_ms)
+    _print_route_leg("Start to Target to Park", closest_park, combined_route_url)
+    _navigate_route(pw_page, combined_route_url, pw_nav_wait_ms)
 
     _print_starting_point_summary(start_address)
-    _print_target_stop_summary(closest_target, target_route_url)
-    _print_park_stop_summary(closest_park, park_route_url)
+    _print_target_stop_summary(closest_target, combined_route_url)
+    _print_park_stop_summary(closest_park, combined_route_url)
 
 
 @pytest.mark.playwright
