@@ -62,7 +62,7 @@ def pw_browser(request) -> Iterator[Browser]:
 
 
 @pytest.fixture
-def pw_context(pw_browser: Browser, base_url: str) -> BrowserContext:
+def pw_context(pw_browser: Browser, base_url: str) -> Iterator[BrowserContext]:
     context = pw_browser.new_context(ignore_https_errors=True)
     context.grant_permissions(["geolocation"], origin=base_url)
     try:
