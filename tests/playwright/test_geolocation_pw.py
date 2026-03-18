@@ -754,6 +754,46 @@ def test_geolocation_navigates_google_maps_all_nearby_parks_playwright(
 
 
 @pytest.mark.playwright
+def test_geolocation_navigates_multi_stop_top_named_parks_playwright(
+    pw_mock_geolocation, pw_page, base_url, pw_nav_wait_ms
+):
+    if USE_MOCK_GEOLOCATION:
+        pw_mock_geolocation(USER_LATITUDE, USER_LONGITUDE)
+
+    page = PWGeolocationPage(pw_page, base_url=base_url).open()
+    page.click_where_am_i().wait_for_coordinates()
+
+    actual_lat = (
+        parse_coordinate(page.lat_text()) if USE_MOCK_GEOLOCATION else USER_LATITUDE
+    )
+    actual_long = (
+        parse_coordinate(page.long_text()) if USE_MOCK_GEOLOCATION else USER_LONGITUDE
+    )
+    parks = _parks_nearby(actual_lat, actual_long, radius_m=PARK_TRIP_RADIUS_M)
+
+    if not parks:
+        pytest.skip(f"No named parks found near ({actual_lat}, {actual_long})")
+
+    parks_to_visit = parks[:PARK_TRIP_LIMIT]
+    start_address = _get_start_address()
+    route_url = _google_maps_many_stop_directions_url(
+        actual_lat,
+        actual_long,
+        parks_to_visit,
+    )
+
+    print(
+        f"Navigating top {len(parks_to_visit)} named parks as one multi-stop trip "
+        f"for ({actual_lat}, {actual_long})"
+    )
+    _navigate_route(pw_page, route_url, pw_nav_wait_ms)
+
+    _print_starting_point_summary(start_address)
+    _print_named_parks_itinerary(parks_to_visit, route_url)
+    _print_closest_park_summary(parks_to_visit)
+
+
+@pytest.mark.playwright
 def test_geolocation_navigates_to_nearest_target_then_park_playwright(
     pw_mock_geolocation, pw_page, base_url, pw_nav_wait_ms
 ):
